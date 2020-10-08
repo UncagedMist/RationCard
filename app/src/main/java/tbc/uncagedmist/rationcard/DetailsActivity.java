@@ -71,9 +71,11 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        alertDialog = new SpotsDialog(this);
-        alertDialog.setCanceledOnTouchOutside(false);
-        alertDialog.setCancelable(false);
+        alertDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Requesting Data...")
+                .setCancelable(false)
+                .build();
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-7920815986886474/3772787579");

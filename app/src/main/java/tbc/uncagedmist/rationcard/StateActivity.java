@@ -68,9 +68,11 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_state);
 
-        alertDialog = new SpotsDialog(this);
-        alertDialog.setCancelable(false);
-        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Requesting Data...")
+                .setCancelable(false)
+                .build();
 
         recyclerState = findViewById(R.id.recyclerState);
 

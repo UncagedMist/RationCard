@@ -3,6 +3,7 @@ package tbc.uncagedmist.rationcard;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,6 +21,7 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import am.appwise.components.ni.NoInternetDialog;
+import dmax.dialog.SpotsDialog;
 import tbc.uncagedmist.rationcard.Common.Common;
 
 public class PrivacyActivity extends AppCompatActivity {
@@ -34,10 +36,20 @@ public class PrivacyActivity extends AppCompatActivity {
 
     NoInternetDialog noInternetDialog;
 
+    AlertDialog alertDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_privacy);
+
+        alertDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Checking URL & Connecting...")
+                .setCancelable(true)
+                .build();
+
+        alertDialog.show();
 
         noInternetDialog = new NoInternetDialog.Builder(PrivacyActivity.this).build();
 
@@ -159,6 +171,7 @@ public class PrivacyActivity extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
+            alertDialog.dismiss();
             progressDialog = new ProgressDialog(PrivacyActivity.this);
             progressDialog.setMessage("Please wait ...");
             progressDialog.show();

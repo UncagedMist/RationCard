@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import am.appwise.components.ni.NoInternetDialog;
+import dmax.dialog.SpotsDialog;
 import tbc.uncagedmist.rationcard.Common.Common;
 
 public class ResultActivity extends AppCompatActivity {
@@ -39,10 +42,20 @@ public class ResultActivity extends AppCompatActivity {
 
     NoInternetDialog noInternetDialog;
 
+    AlertDialog alertDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        alertDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Checking URL & Connecting...")
+                .setCancelable(true)
+                .build();
+
+        alertDialog.show();
 
         noInternetDialog = new NoInternetDialog.Builder(ResultActivity.this).build();
 
@@ -160,7 +173,6 @@ public class ResultActivity extends AppCompatActivity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
-
             return true;
 
         }
@@ -168,8 +180,9 @@ public class ResultActivity extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
+            alertDialog.dismiss();
             progressDialog = new ProgressDialog(ResultActivity.this);
-            progressDialog.setMessage("Please wait ...");
+            progressDialog.setMessage("Loading URL Data...");
             progressDialog.show();
             progressDialog.setCancelable(false);
         }
