@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">RationCard</string>
+
+    <string name="Tool_Name">Ration Card</string>
+
+    <string name="APP_ID">ca-app-pub-7920815986886474~2119672434</string>
+
+    <string name="Banner_State">ca-app-pub-7920815986886474/8505722584</string>
+    <string name="Banner_Detail">ca-app-pub-7920815986886474/2962586013</string>
+    <string name="Banner_Result">ca-app-pub-7920815986886474/1717469876</string>
+
+
+    <string name="identity">Get All the Information about \n your Personal Identification Card \n Like : Aadhaar Card, Pan Card, \n Voter ID etc...</string>
+    <string name="services">It notifies you about \n all the Current and Upcoming \n Job, Government Services etc..</string>
+    <string name="updated">Always stay Updated without \n lacking any Benefits.</string>
+</resources>
