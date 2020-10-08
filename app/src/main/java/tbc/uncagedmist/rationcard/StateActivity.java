@@ -68,12 +68,6 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_state);
 
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-
         alertDialog = new SpotsDialog(this);
         alertDialog.setCancelable(false);
         alertDialog.setCanceledOnTouchOutside(false);
@@ -89,7 +83,7 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
         setSupportActionBar(toolbar);
         TextView txtTitle = toolbar.findViewById(R.id.tool_title);
 
-        txtTitle.setText(R.string.Tool_Name);
+        txtTitle.setText(R.string.title);
 
         AdRequest adRequest = new AdRequest.Builder().build();
 
@@ -103,9 +97,9 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                String message = "Never Miss A Sarkari Update. Install Sarkari Sahayata and Stay Updated! \n https://play.google.com/store/apps/details?id=tbc.uncagedmist.sarkarisahayata";
+                String message = "Never Miss A Thing About Ration Card. Install One Ration Card App and Stay Updated! \n https://play.google.com/store/apps/details?id=tbc.uncagedmist.rationcard";
                 intent.putExtra(Intent.EXTRA_TEXT, message);
-                startActivity(Intent.createChooser(intent, "Share Ration Card App Using"));
+                startActivity(Intent.createChooser(intent, "Share One Ration Card App Using"));
             }
         });
 

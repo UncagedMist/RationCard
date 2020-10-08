@@ -1,13 +1,14 @@
 <resources>
-    <string name="app_name">RationCard</string>
+    <string name="app_name">One Ration</string>
 
-    <string name="Tool_Name">Ration Card</string>
+    <string name="title">One Ration Card</string>
 
     <string name="APP_ID">ca-app-pub-7920815986886474~2119672434</string>
 
     <string name="Banner_State">ca-app-pub-7920815986886474/8505722584</string>
     <string name="Banner_Detail">ca-app-pub-7920815986886474/2962586013</string>
     <string name="Banner_Result">ca-app-pub-7920815986886474/1717469876</string>
+    <string name="Banner_Privacy">ca-app-pub-7920815986886474/8141393523</string>
 
 
     <string name="identity">Get All the Information about \n your Personal Identification Card \n Like : Aadhaar Card, Pan Card, \n Voter ID etc...</string>

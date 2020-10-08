@@ -26,12 +26,11 @@ public class MyApplicationClass extends Application {
         context = getApplicationContext();
         MobileAds.initialize(this, "ca-app-pub-7920815986886474~5642992812");
 
-        MobileAds.initialize(
-                this,
-                new OnInitializationCompleteListener() {
-                    @Override
-                    public void onInitializationComplete(InitializationStatus initializationStatus) {}
-                });
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
 
         appOpenManager = new AppOpenManager(this);
     }

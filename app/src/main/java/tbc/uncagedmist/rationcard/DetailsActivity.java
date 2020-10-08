@@ -71,12 +71,6 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-
         alertDialog = new SpotsDialog(this);
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.setCancelable(false);
@@ -116,9 +110,9 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                String message = "Never Miss A Sarkari Update. Install Sarkari Sahayata and Stay Updated! \n https://play.google.com/store/apps/details?id=tbc.uncagedmist.sarkarisahayata";
+                String message = "Never Miss A Thing About Ration Card. Install One Ration Card App and Stay Updated! \n https://play.google.com/store/apps/details?id=tbc.uncagedmist.rationcard";
                 intent.putExtra(Intent.EXTRA_TEXT, message);
-                startActivity(Intent.createChooser(intent, "Share Sarkari Sahayata Using"));
+                startActivity(Intent.createChooser(intent, "Share One Ration Card App Using"));
             }
         });
 

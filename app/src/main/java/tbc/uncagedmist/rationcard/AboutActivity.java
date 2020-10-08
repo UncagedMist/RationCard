@@ -26,9 +26,9 @@ public class AboutActivity extends AppCompatActivity {
         aboutPage.setCover(R.drawable.coverimg);
         aboutPage.setName("Kundan Kumar");
         aboutPage.setDescription("Android Developer | Android App, Game and Software Developer.");
-        aboutPage.setAppIcon(R.drawable.ic_launcher);
+        aboutPage.setAppIcon(R.mipmap.ic_logo);
 
-        aboutPage.setAppName(getString(R.string.app_name));
+        aboutPage.setAppName(getString(R.string.title));
         try {
             version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         }
@@ -37,7 +37,7 @@ public class AboutActivity extends AppCompatActivity {
         }
         aboutPage.setVersionNameAsAppSubTitle(version);
         aboutPage.setAppDescription("" +
-                "Ration Card Seva is an Android app Designed to Help People .\n\n" +
+                "One Ration Card is an Android app Designed to Help People .\n\n" +
                 "This app Provides Information on Ration Card Services offered by Central and State Government with beautiful UI. " +
                 "People can opt for any available government services and Get benefited." +
                 "It also offers to apply for available Services and keep the track of your Applied application.\n\n"+

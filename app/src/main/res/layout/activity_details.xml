@@ -6,7 +6,7 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple"
+    android:background="@color/pink"
     tools:context=".DetailsActivity">
 
     <include
@@ -44,7 +44,7 @@
         android:id="@+id/detailShare"
         android:layout_margin="16dp"
         android:src="@drawable/ic_baseline_share_24"
-        android:backgroundTint="@color/purple"
+        android:backgroundTint="@color/pink"
         android:layout_alignParentEnd="true"
         android:layout_above="@id/detailBelowBanner"
         android:layout_width="wrap_content"
