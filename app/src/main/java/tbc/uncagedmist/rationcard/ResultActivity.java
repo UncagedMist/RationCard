@@ -4,16 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,39 +22,34 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import am.appwise.components.ni.NoInternetDialog;
-import dmax.dialog.SpotsDialog;
 import tbc.uncagedmist.rationcard.Common.Common;
+import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
+import tbc.uncagedmist.rationcard.Utility.CustomProgressDialog;
 
 public class ResultActivity extends AppCompatActivity {
 
     AdView resultAboveBanner, resultBottomBanner;
     WebView webView;
-    ProgressDialog progressDialog;
 
     FloatingActionButton resultShare;
 
     NoInternetDialog noInternetDialog;
 
-    AlertDialog alertDialog;
+    CustomLoadDialog loadDialog;
+    CustomProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        alertDialog = new SpotsDialog.Builder()
-                .setContext(this)
-                .setMessage("Checking URL & Connecting...")
-                .setCancelable(true)
-                .build();
+        loadDialog = new CustomLoadDialog(this);
+        progressDialog = new CustomProgressDialog(this);
 
-        alertDialog.show();
+        loadDialog.showDialog();
 
         noInternetDialog = new NoInternetDialog.Builder(ResultActivity.this).build();
 
@@ -95,6 +89,7 @@ public class ResultActivity extends AppCompatActivity {
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
         webView.loadUrl(url);
@@ -171,27 +166,28 @@ public class ResultActivity extends AppCompatActivity {
     private class MyWebViewClient extends WebViewClient {
 
         @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.proceed();
+        }
+
+        @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
-
         }
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            alertDialog.dismiss();
-            progressDialog = new ProgressDialog(ResultActivity.this);
-            progressDialog.setMessage("Loading URL Data...");
-            progressDialog.show();
-            progressDialog.setCancelable(false);
+            loadDialog.hideDialog();
+            progressDialog.showProgressDialog();
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             if(progressDialog!=null){
-                progressDialog.dismiss();
+                progressDialog.hideProgressDialog();
             }
         }
     }

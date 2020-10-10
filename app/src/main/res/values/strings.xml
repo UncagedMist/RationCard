@@ -6,9 +6,17 @@
     <string name="APP_ID">ca-app-pub-7920815986886474~2119672434</string>
 
     <string name="Banner_State">ca-app-pub-7920815986886474/8505722584</string>
+    <string name="Banner_State_Bottom">ca-app-pub-7920815986886474/1314215003</string>
+
     <string name="Banner_Detail">ca-app-pub-7920815986886474/2962586013</string>
+    <string name="Banner_Detail_Bottom">ca-app-pub-7920815986886474/4626434742</string>
+
     <string name="Banner_Result">ca-app-pub-7920815986886474/1717469876</string>
+    <string name="Banner_Result_Bottom">ca-app-pub-7920815986886474/3121781380</string>
+
     <string name="Banner_Privacy">ca-app-pub-7920815986886474/8141393523</string>
+    <string name="Banner_Privacy_Bottom">ca-app-pub-7920815986886474/7443992168</string>
+
 
 
     <string name="identity">Get All the Information about \n your Personal Identification Card \n Like : Aadhaar Card, Pan Card, \n Voter ID etc...</string>

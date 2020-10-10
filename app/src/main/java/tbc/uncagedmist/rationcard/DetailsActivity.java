@@ -7,7 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlertDialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,9 +23,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -42,11 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import am.appwise.components.ni.NoInternetDialog;
-import dmax.dialog.SpotsDialog;
 import tbc.uncagedmist.rationcard.Adapter.DetailAdapter;
 import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.Interface.IDetailsLoadListener;
 import tbc.uncagedmist.rationcard.Model.Detail;
+import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
 
 public class DetailsActivity extends AppCompatActivity implements IDetailsLoadListener {
 
@@ -61,7 +58,8 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
 
     IDetailsLoadListener iDetailsLoadListener;
 
-    AlertDialog alertDialog;
+    CustomLoadDialog loadDialog;
+
     NoInternetDialog noInternetDialog;
 
     private InterstitialAd mInterstitialAd;
@@ -71,11 +69,7 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        alertDialog = new SpotsDialog.Builder()
-                .setContext(this)
-                .setMessage("Requesting Data...")
-                .setCancelable(false)
-                .build();
+        loadDialog = new CustomLoadDialog(this);
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-7920815986886474/3772787579");
@@ -209,7 +203,7 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
     }
 
     private void getAllDetails() {
-        alertDialog.show();
+        loadDialog.showDialog();
         refDetails = FirebaseFirestore.getInstance()
                 .collection("Sarkari")
                 .document(Common.STATE_ID)
@@ -231,7 +225,7 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
                                 details.add(detail);
                             }
                             iDetailsLoadListener.onDetailLoadSuccess(details);
-                            alertDialog.dismiss();
+                            loadDialog.hideDialog();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

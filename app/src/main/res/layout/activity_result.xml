@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/Banner_Result"
+        ads:adUnitId="@string/Banner_Result_Bottom"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,9 +23,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -43,11 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import am.appwise.components.ni.NoInternetDialog;
-import dmax.dialog.SpotsDialog;
 import tbc.uncagedmist.rationcard.Adapter.StateAdapter;
 import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.Interface.IStateLoadListener;
 import tbc.uncagedmist.rationcard.Model.State;
+import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
 
 public class StateActivity extends AppCompatActivity implements IStateLoadListener {
 
@@ -59,7 +55,7 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
 
     IStateLoadListener iStateLoadListener;
 
-    AlertDialog alertDialog;
+    CustomLoadDialog loadDialog;
 
     NoInternetDialog noInternetDialog;
 
@@ -68,11 +64,7 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_state);
 
-        alertDialog = new SpotsDialog.Builder()
-                .setContext(this)
-                .setMessage("Requesting Data...")
-                .setCancelable(false)
-                .build();
+        loadDialog = new CustomLoadDialog(this);
 
         recyclerState = findViewById(R.id.recyclerState);
 
@@ -192,7 +184,7 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
     }
 
     private void getAllStateList() {
-        alertDialog.show();
+        loadDialog.showDialog();
 
         refAllStates = FirebaseFirestore.getInstance()
                 .collection("Sarkari")
@@ -213,7 +205,7 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
                                 stateList.add(state);
                             }
                             iStateLoadListener.onAllPStateLoadSuccess(stateList);
-                            alertDialog.dismiss();
+                            loadDialog.hideDialog();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -284,6 +276,7 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
         }
         return true;
     }
+
 
     @Override
     public void onDestroy() {
