@@ -5,6 +5,8 @@
 
     <string name="APP_ID">ca-app-pub-7920815986886474~2119672434</string>
 
+    <string name="Test_Banner">ca-app-pub-3940256099942544/6300978111</string>
+
     <string name="Banner_State">ca-app-pub-7920815986886474/8505722584</string>
     <string name="Banner_State_Bottom">ca-app-pub-7920815986886474/1314215003</string>
 
@@ -17,7 +19,8 @@
     <string name="Banner_Privacy">ca-app-pub-7920815986886474/8141393523</string>
     <string name="Banner_Privacy_Bottom">ca-app-pub-7920815986886474/7443992168</string>
 
-
+    <string name="Banner_Setting">ca-app-pub-7920815986886474/7488525516</string>
+    <string name="Banner_Setting_Bottom">ca-app-pub-7920815986886474/4627570210</string>
 
     <string name="identity">Get All the Information about \n your Personal Identification Card \n Like : Aadhaar Card, Pan Card, \n Voter ID etc...</string>
     <string name="services">It notifies you about \n all the Current and Upcoming \n Job, Government Services etc..</string>

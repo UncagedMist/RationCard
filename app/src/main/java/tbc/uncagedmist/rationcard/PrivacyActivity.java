@@ -3,10 +3,10 @@ package tbc.uncagedmist.rationcard;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -18,14 +18,15 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.special.ResideMenu.ResideMenu;
+import com.special.ResideMenu.ResideMenuItem;
 
 import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
+import tbc.uncagedmist.rationcard.Utility.CustomProgressDialog;
 
-public class PrivacyActivity extends AppCompatActivity {
-
-    ProgressDialog progressDialog;
+public class PrivacyActivity extends AppCompatActivity implements View.OnClickListener {
 
     WebView webView;
 
@@ -36,6 +37,13 @@ public class PrivacyActivity extends AppCompatActivity {
     NoInternetDialog noInternetDialog;
 
     CustomLoadDialog loadDialog;
+    CustomProgressDialog progressDialog;
+
+    private ResideMenu resideMenu;
+    private ResideMenuItem itemHome;
+    private ResideMenuItem itemAbout;
+    private ResideMenuItem itemPrivacy;
+    private ResideMenuItem itemSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,7 @@ public class PrivacyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_privacy);
 
         loadDialog = new CustomLoadDialog(this);
+        progressDialog = new CustomProgressDialog(this);
 
         loadDialog.showDialog();
 
@@ -54,11 +63,11 @@ public class PrivacyActivity extends AppCompatActivity {
 
         privacyShare = findViewById(R.id.privacyShare);
 
-        Toolbar toolbar = findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-        TextView txtTitle = toolbar.findViewById(R.id.tool_title);
+        TextView txtTitle = findViewById(R.id.txtTitle);
 
         txtTitle.setText("Privacy Policy");
+
+        setUpMenu();
 
         AdRequest adRequest = new AdRequest.Builder().build();
 
@@ -167,20 +176,88 @@ public class PrivacyActivity extends AppCompatActivity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             loadDialog.hideDialog();
-            progressDialog = new ProgressDialog(PrivacyActivity.this);
-            progressDialog.setMessage("Please wait ...");
-            progressDialog.show();
-            progressDialog.setCancelable(false);
+            progressDialog.showProgressDialog();
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             if(progressDialog!=null){
-                progressDialog.dismiss();
+                progressDialog.hideProgressDialog();
             }
         }
     }
+
+    private void setUpMenu() {
+
+        resideMenu = new ResideMenu(this);
+//        resideMenu.setUse3D(true);
+        resideMenu.setBackground(R.drawable.menu_background);
+        resideMenu.attachToActivity(this);
+        resideMenu.setMenuListener(menuListener);
+
+        resideMenu.setScaleValue(0.6f);
+
+        itemHome     = new ResideMenuItem(this, R.drawable.icon_home,     "Home");
+        itemAbout  = new ResideMenuItem(this, R.drawable.icon_profile,  "About");
+        itemPrivacy = new ResideMenuItem(this, R.drawable.privacy, "Privacy");
+        itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "Settings");
+
+        itemHome.setOnClickListener(this);
+        itemAbout.setOnClickListener(this);
+        itemPrivacy.setOnClickListener(this);
+        itemSettings.setOnClickListener(this);
+
+        resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
+        resideMenu.addMenuItem(itemAbout, ResideMenu.DIRECTION_LEFT);
+        resideMenu.addMenuItem(itemPrivacy, ResideMenu.DIRECTION_RIGHT);
+        resideMenu.addMenuItem(itemSettings, ResideMenu.DIRECTION_RIGHT);
+
+        findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
+            }
+        });
+        findViewById(R.id.title_bar_right_menu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
+            }
+        });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return resideMenu.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        if (view == itemHome){
+
+        }else if (view == itemAbout){
+            startActivity(new Intent(PrivacyActivity.this,AboutActivity.class));
+
+        }else if (view == itemPrivacy){
+
+        }else if (view == itemSettings){
+            startActivity(new Intent(PrivacyActivity.this,SettingActivity.class));
+        }
+
+        resideMenu.closeMenu();
+    }
+
+    private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
+        @Override
+        public void openMenu() {
+        }
+
+        @Override
+        public void closeMenu() {
+        }
+    };
 
     @Override
     public void onDestroy() {

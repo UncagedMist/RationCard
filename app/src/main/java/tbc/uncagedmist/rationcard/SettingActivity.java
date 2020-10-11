@@ -1,26 +1,14 @@
 package tbc.uncagedmist.rationcard;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.http.SslError;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,21 +16,8 @@ import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
 
 import am.appwise.components.ni.NoInternetDialog;
-import tbc.uncagedmist.rationcard.Common.Common;
-import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
-import tbc.uncagedmist.rationcard.Utility.CustomProgressDialog;
 
-public class ResultActivity extends AppCompatActivity implements View.OnClickListener {
-
-    AdView resultAboveBanner, resultBottomBanner;
-    WebView webView;
-
-    FloatingActionButton resultShare;
-
-    NoInternetDialog noInternetDialog;
-
-    CustomLoadDialog loadDialog;
-    CustomProgressDialog progressDialog;
+public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ResideMenu resideMenu;
     private ResideMenuItem itemHome;
@@ -50,41 +25,30 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
     private ResideMenuItem itemPrivacy;
     private ResideMenuItem itemSettings;
 
+    FloatingActionButton settingShare;
+
+    AdView settingAboveBanner, settingBottomBanner;
+
+    NoInternetDialog noInternetDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_result);
+        setContentView(R.layout.activity_setting);
 
-        loadDialog = new CustomLoadDialog(this);
-        progressDialog = new CustomProgressDialog(this);
+        noInternetDialog = new NoInternetDialog.Builder(SettingActivity.this).build();
 
-        loadDialog.showDialog();
-
-        noInternetDialog = new NoInternetDialog.Builder(ResultActivity.this).build();
-
-        webView = findViewById(R.id.webResult);
-
-        resultAboveBanner = findViewById(R.id.resultAboveBanner);
-        resultBottomBanner = findViewById(R.id.resultBottomBanner);
-
+        settingAboveBanner = findViewById(R.id.settingAboveBanner);
+        settingBottomBanner = findViewById(R.id.settingBottomBanner);
         TextView txtTitle = findViewById(R.id.txtTitle);
 
-        resultShare = findViewById(R.id.resultShare);
-
-        txtTitle.setText(Common.CurrentDetail.getName());
+        txtTitle.setText("Setting");
 
         setUpMenu();
 
-        AdRequest adRequest = new AdRequest.Builder().build();
+        settingShare = findViewById(R.id.settingShare);
 
-        resultAboveBanner.loadAd(adRequest);
-        resultBottomBanner.loadAd(adRequest);
-
-        webView.setWebViewClient(new MyWebViewClient());
-
-        String url = Common.CurrentDetail.getWeb().trim();
-
-        resultShare.setOnClickListener(new View.OnClickListener() {
+        settingShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
@@ -95,16 +59,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-
-        webView.loadUrl(url);
-
-        resultAboveBanner.setAdListener(new AdListener() {
+        settingAboveBanner.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
@@ -138,7 +93,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        resultBottomBanner.setAdListener(new AdListener() {
+        settingBottomBanner.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
@@ -171,35 +126,6 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 // to the app after tapping on an ad.
             }
         });
-    }
-
-    private class MyWebViewClient extends WebViewClient {
-
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed();
-        }
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
-        }
-
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-            loadDialog.hideDialog();
-            progressDialog.showProgressDialog();
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            if(progressDialog!=null){
-                progressDialog.hideProgressDialog();
-            }
-        }
     }
 
     private void setUpMenu() {
@@ -252,13 +178,12 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         if (view == itemHome){
 
         }else if (view == itemAbout){
-            startActivity(new Intent(ResultActivity.this,AboutActivity.class));
+            startActivity(new Intent(SettingActivity.this,AboutActivity.class));
 
         }else if (view == itemPrivacy){
-            startActivity(new Intent(ResultActivity.this,PrivacyActivity.class));
+            startActivity(new Intent(SettingActivity.this,PrivacyActivity.class));
 
         }else if (view == itemSettings){
-            startActivity(new Intent(ResultActivity.this,SettingActivity.class));
         }
 
         resideMenu.closeMenu();

@@ -5,18 +5,64 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
+    android:background="@color/green"
     tools:context=".PrivacyActivity">
 
-    <include
-        android:id="@+id/app_bar"
-        layout="@layout/app_bar"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_top">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#2ea3fe"/>
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/titlebar_menu_selector"
+                android:id="@+id/title_bar_left_menu"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:padding="7dp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <Button
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/titlebar_menu_selector"
+                android:id="@+id/title_bar_right_menu"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"/>
+
+        </FrameLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#ebebeb"/>
+
+    </LinearLayout>
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/privacyAboveBanner"
         android:layout_margin="2dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/app_bar"
+        android:layout_below="@id/layout_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         ads:adSize="BANNER"
@@ -44,6 +90,7 @@
         android:id="@+id/privacyShare"
         android:layout_margin="16dp"
         android:src="@drawable/ic_baseline_share_24"
+        android:backgroundTint="@color/green"
         android:layout_alignParentEnd="true"
         android:layout_above="@id/privacyBottomBanner"
         android:layout_width="wrap_content"

@@ -12,7 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +34,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.special.ResideMenu.ResideMenu;
+import com.special.ResideMenu.ResideMenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,7 @@ import tbc.uncagedmist.rationcard.Interface.IStateLoadListener;
 import tbc.uncagedmist.rationcard.Model.State;
 import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
 
-public class StateActivity extends AppCompatActivity implements IStateLoadListener {
+public class StateActivity extends AppCompatActivity implements IStateLoadListener,View.OnClickListener {
 
     AdView aboveStateBanner, bottomStateBanner;
     RecyclerView recyclerState;
@@ -59,6 +61,12 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
 
     NoInternetDialog noInternetDialog;
 
+    private ResideMenu resideMenu;
+    private ResideMenuItem itemHome;
+    private ResideMenuItem itemAbout;
+    private ResideMenuItem itemPrivacy;
+    private ResideMenuItem itemSettings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,16 +76,17 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
 
         recyclerState = findViewById(R.id.recyclerState);
 
+        stateShare = findViewById(R.id.stateShare);
+
         aboveStateBanner = findViewById(R.id.aboveStateBanner);
         bottomStateBanner = findViewById(R.id.bottomStateBanner);
 
-        stateShare = findViewById(R.id.stateShare);
 
-        Toolbar toolbar = findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-        TextView txtTitle = toolbar.findViewById(R.id.tool_title);
+        TextView txtTitle = findViewById(R.id.txtTitle);
 
         txtTitle.setText(R.string.title);
+
+        setUpMenu();
 
         AdRequest adRequest = new AdRequest.Builder().build();
 
@@ -168,6 +177,8 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
         });
     }
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -216,6 +227,78 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
         });
     }
 
+    private void setUpMenu() {
+
+        resideMenu = new ResideMenu(this);
+//        resideMenu.setUse3D(true);
+        resideMenu.setBackground(R.drawable.menu_background);
+        resideMenu.attachToActivity(this);
+        resideMenu.setMenuListener(menuListener);
+
+        resideMenu.setScaleValue(0.6f);
+
+        itemHome     = new ResideMenuItem(this, R.drawable.icon_home,     "Home");
+        itemAbout  = new ResideMenuItem(this, R.drawable.icon_profile,  "About");
+        itemPrivacy = new ResideMenuItem(this, R.drawable.privacy, "Privacy");
+        itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "Settings");
+
+        itemHome.setOnClickListener(this);
+        itemAbout.setOnClickListener(this);
+        itemPrivacy.setOnClickListener(this);
+        itemSettings.setOnClickListener(this);
+
+        resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
+        resideMenu.addMenuItem(itemAbout, ResideMenu.DIRECTION_LEFT);
+        resideMenu.addMenuItem(itemPrivacy, ResideMenu.DIRECTION_RIGHT);
+        resideMenu.addMenuItem(itemSettings, ResideMenu.DIRECTION_RIGHT);
+
+        findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
+            }
+        });
+        findViewById(R.id.title_bar_right_menu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
+            }
+        });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return resideMenu.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        if (view == itemHome){
+
+        }else if (view == itemAbout){
+            startActivity(new Intent(StateActivity.this,AboutActivity.class));
+
+        }else if (view == itemPrivacy){
+            startActivity(new Intent(StateActivity.this,PrivacyActivity.class));
+
+        }else if (view == itemSettings){
+            startActivity(new Intent(StateActivity.this,SettingActivity.class));
+        }
+
+        resideMenu.closeMenu();
+    }
+
+    private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
+        @Override
+        public void openMenu() {
+        }
+
+        @Override
+        public void closeMenu() {
+        }
+    };
+
     @Override
     public void onAllPStateLoadSuccess(List<State> allStateList) {
         recyclerState.setHasFixedSize(true);
@@ -254,27 +337,6 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
                         System.exit(1);
                     }
                 }).build();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.action_about)  {
-            startActivity(new Intent(StateActivity.this,AboutActivity.class));
-        }
-        else if (id == R.id.action_privacy) {
-            startActivity(new Intent(StateActivity.this,PrivacyActivity.class));
-        }
-        return true;
     }
 
 

@@ -6,8 +6,13 @@
 
     <color name="overlayBackgroundMenu">#7f004487</color>
     <color name="colorWhite">#FFFFFF</color>
+
     <color name="purple">#ba53de</color>
     <color name="pink">#f469a9</color>
     <color name="black">#000000</color>
     <color name="blue">#88bef5</color>
+
+    <color name="red">#ff6767</color>
+    <color name="orange">#ffb067</color>
+    <color name="green">#67ffae</color>
 </resources>
