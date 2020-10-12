@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,6 +41,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         settingAboveBanner = findViewById(R.id.settingAboveBanner);
         settingBottomBanner = findViewById(R.id.settingBottomBanner);
+
+//        settingAboveBanner.setAdSize(AdSize.BANNER);
+//        settingAboveBanner.setAdUnitId(getResources().getString(R.string.Banner_Setting));
+//
+//        settingBottomBanner.setAdSize(AdSize.BANNER);
+//        settingBottomBanner.setAdUnitId(getResources().getString(R.string.Banner_Setting_Bottom));
+
         TextView txtTitle = findViewById(R.id.txtTitle);
 
         txtTitle.setText("Setting");

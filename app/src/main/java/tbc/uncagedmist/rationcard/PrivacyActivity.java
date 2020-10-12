@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -66,6 +67,13 @@ public class PrivacyActivity extends AppCompatActivity implements View.OnClickLi
         TextView txtTitle = findViewById(R.id.txtTitle);
 
         txtTitle.setText("Privacy Policy");
+
+//        privacyAboveBanner.setAdSize(AdSize.BANNER);
+//        privacyAboveBanner.setAdUnitId(getResources().getString(R.string.Banner_Privacy));
+//
+//        privacyBottomBanner.setAdSize(AdSize.BANNER);
+//        privacyBottomBanner.setAdUnitId(getResources().getString(R.string.Banner_Privacy_Bottom));
+
 
         setUpMenu();
 

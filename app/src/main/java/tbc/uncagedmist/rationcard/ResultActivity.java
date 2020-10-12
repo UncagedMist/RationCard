@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -70,6 +71,12 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         TextView txtTitle = findViewById(R.id.txtTitle);
 
         resultShare = findViewById(R.id.resultShare);
+
+//        resultAboveBanner.setAdSize(AdSize.BANNER);
+//        resultAboveBanner.setAdUnitId(getResources().getString(R.string.Banner_Result));
+//
+//        resultBottomBanner.setAdSize(AdSize.BANNER);
+//        resultBottomBanner.setAdUnitId(getResources().getString(R.string.Banner_Result_Bottom));
 
         txtTitle.setText(Common.CurrentDetail.getName());
 

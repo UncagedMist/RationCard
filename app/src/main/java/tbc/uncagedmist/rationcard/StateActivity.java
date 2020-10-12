@@ -21,6 +21,7 @@ import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog;
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialogListener;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -80,6 +81,12 @@ public class StateActivity extends AppCompatActivity implements IStateLoadListen
 
         aboveStateBanner = findViewById(R.id.aboveStateBanner);
         bottomStateBanner = findViewById(R.id.bottomStateBanner);
+
+//        aboveStateBanner.setAdSize(AdSize.BANNER);
+//        aboveStateBanner.setAdUnitId(getResources().getString(R.string.Banner_State));
+//
+//        bottomStateBanner.setAdSize(AdSize.BANNER);
+//        bottomStateBanner.setAdUnitId(getResources().getString(R.string.Banner_State_Bottom));
 
 
         TextView txtTitle = findViewById(R.id.txtTitle);

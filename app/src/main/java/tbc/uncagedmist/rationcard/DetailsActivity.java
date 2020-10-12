@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.LoadAdError;
@@ -96,6 +97,12 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
         recyclerDetail = findViewById(R.id.recycler_detail);
         aboveDetailBanner = findViewById(R.id.detailAboveBanner);
         bottomDetailBanner = findViewById(R.id.detailBelowBanner);
+
+//        aboveDetailBanner.setAdSize(AdSize.BANNER);
+//        aboveDetailBanner.setAdUnitId(getResources().getString(R.string.Banner_Detail));
+//
+//        bottomDetailBanner.setAdSize(AdSize.BANNER);
+//        bottomDetailBanner.setAdUnitId(getResources().getString(R.string.Banner_Detail_Bottom));
 
         detailShare = findViewById(R.id.detailShare);
 
