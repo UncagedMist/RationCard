@@ -13,6 +13,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
+import tbc.uncagedmist.rationcard.R;
 import tbc.uncagedmist.rationcard.Utility.AppOpenManager;
 import tbc.uncagedmist.rationcard.Utility.MyNetworkReceiver;
 
@@ -36,7 +37,7 @@ public class MyApplicationClass extends Application {
         super.onCreate();
 
         context = getApplicationContext();
-        MobileAds.initialize(this, "ca-app-pub-7920815986886474~5642992812");
+        MobileAds.initialize(this, getResources().getString(R.string.APP_ID));
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override

@@ -1,16 +1,17 @@
 package tbc.uncagedmist.rationcard;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
+import android.app.DownloadManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.os.Environment;
+
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.SslErrorHandler;
@@ -19,9 +20,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
+import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog;
+import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialogListener;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -183,13 +185,66 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
     private class MyWebViewClient extends WebViewClient {
 
         @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed();
+        public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+
+            String message = "SSL Certificate Error";
+            switch (error.getPrimaryError()) {
+                case SslError.SSL_UNTRUSTED:
+                    message = "The certificate authority is not trusted.";
+                    break;
+                case SslError.SSL_EXPIRED:
+                    message = "The certificate has expired.";
+                    break;
+                case SslError.SSL_IDMISMATCH:
+                    message = "The certificate Hostname mismatch.";
+                    break;
+                case SslError.SSL_NOTYETVALID:
+                    message = "The certificate is not yet valid.";
+                    break;
+            }
+
+            message += "\n\nDo you want to continue anyway?";
+
+            new TTFancyGifDialog.Builder(ResultActivity.this)
+                    .setTitle("SSL Certificate Error")
+                    .setMessage(message)
+                    .setPositiveBtnText("Continue")
+                    .setPositiveBtnBackground("#22b573")
+                    .setNegativeBtnText("Cancel")
+                    .setNegativeBtnBackground("#c1272d")
+                    .setGifResource(R.drawable.gif22)
+                    .isCancellable(false)
+                    .OnPositiveClicked(new TTFancyGifDialogListener() {
+                        @Override
+                        public void OnClick() {
+                            handler.proceed();
+                        }
+                    })
+                    .OnNegativeClicked(new TTFancyGifDialogListener() {
+                        @Override
+                        public void OnClick() {
+                            handler.cancel();
+                        }
+                    }).build();
         }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+            boolean shouldOverride = false;
+
             view.loadUrl(url);
+
+//            if(view.getUrl().contains(".pdf")) {
+//                DownloadManager.Request request = new DownloadManager.Request(
+//                        Uri.parse(url));
+//                request.allowScanningByMediaScanner();
+//                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "download");
+//
+//                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+//                dm.enqueue(request);
+//            }
             return true;
         }
 

@@ -82,7 +82,7 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
         loadDialog = new CustomLoadDialog(this);
 
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-7920815986886474/3772787579");
+        mInterstitialAd.setAdUnitId("ca-app-pub-5860770870597755/8496470950");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         mInterstitialAd.setAdListener(new AdListener() {
