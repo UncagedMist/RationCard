@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
@@ -42,15 +43,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         settingAboveBanner = findViewById(R.id.settingAboveBanner);
         settingBottomBanner = findViewById(R.id.settingBottomBanner);
 
-//        settingAboveBanner.setAdSize(AdSize.BANNER);
-//        settingAboveBanner.setAdUnitId(getResources().getString(R.string.Banner_Setting));
-//
-//        settingBottomBanner.setAdSize(AdSize.BANNER);
-//        settingBottomBanner.setAdUnitId(getResources().getString(R.string.Banner_Setting_Bottom));
-
         TextView txtTitle = findViewById(R.id.txtTitle);
 
         txtTitle.setText("Setting");
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        settingAboveBanner.loadAd(adRequest);
+        settingBottomBanner.loadAd(adRequest);
+
 
         setUpMenu();
 
@@ -148,7 +149,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         itemHome     = new ResideMenuItem(this, R.drawable.icon_home,     "Home");
         itemAbout  = new ResideMenuItem(this, R.drawable.icon_profile,  "About");
-        itemPrivacy = new ResideMenuItem(this, R.drawable.privacy, "Privacy");
+        itemPrivacy = new ResideMenuItem(this, R.drawable.icon_profile, "Privacy");
         itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "Settings");
 
         itemHome.setOnClickListener(this);

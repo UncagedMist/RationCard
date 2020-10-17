@@ -276,7 +276,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
 
         itemHome     = new ResideMenuItem(this, R.drawable.icon_home,     "Home");
         itemAbout  = new ResideMenuItem(this, R.drawable.icon_profile,  "About");
-        itemPrivacy = new ResideMenuItem(this, R.drawable.privacy, "Privacy");
+        itemPrivacy = new ResideMenuItem(this, R.drawable.icon_profile, "Privacy");
         itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "Settings");
 
         itemHome.setOnClickListener(this);
