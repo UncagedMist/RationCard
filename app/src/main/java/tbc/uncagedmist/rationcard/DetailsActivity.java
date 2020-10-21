@@ -98,12 +98,6 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
         aboveDetailBanner = findViewById(R.id.detailAboveBanner);
         bottomDetailBanner = findViewById(R.id.detailBelowBanner);
 
-//        aboveDetailBanner.setAdSize(AdSize.BANNER);
-//        aboveDetailBanner.setAdUnitId(getResources().getString(R.string.Banner_Detail));
-//
-//        bottomDetailBanner.setAdSize(AdSize.BANNER);
-//        bottomDetailBanner.setAdUnitId(getResources().getString(R.string.Banner_Detail_Bottom));
-
         detailShare = findViewById(R.id.detailShare);
 
         txtTitle = findViewById(R.id.txtTitle);
@@ -198,6 +192,38 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
             public void onAdClosed() {
                 // Code to be executed when the user is about to return
                 // to the app after tapping on an ad.
+            }
+        });
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the interstitial ad is closed.
             }
         });
     }

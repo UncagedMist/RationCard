@@ -5,15 +5,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.shashank.sony.fancyaboutpagelib.FancyAboutPage;
 
 import am.appwise.components.ni.NoInternetDialog;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends AppCompatActivity implements RewardedVideoAdListener {
 
     FancyAboutPage aboutPage;
     String version;
     NoInternetDialog noInternetDialog;
+
+    private RewardedVideoAd mRewardedVideoAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,11 +29,16 @@ public class AboutActivity extends AppCompatActivity {
 
         noInternetDialog = new NoInternetDialog.Builder(AboutActivity.this).build();
 
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+        mRewardedVideoAd.setRewardedVideoAdListener(this);
+
         aboutPage = findViewById(R.id.aboutPage);
         aboutPage.setCover(R.drawable.coverimg);
         aboutPage.setName("Kundan Kumar");
         aboutPage.setDescription("Android Developer | Android App, Game and Software Developer.");
         aboutPage.setAppIcon(R.mipmap.ic_logo);
+
+        loadRewardedVideoAd();
 
         aboutPage.setAppName(getString(R.string.title));
         try {
@@ -51,8 +63,85 @@ public class AboutActivity extends AppCompatActivity {
         aboutPage.addGitHubLink("https://github.com/UncagedMist");
     }
 
+    private void loadRewardedVideoAd() {
+        mRewardedVideoAd.loadAd("ca-app-pub-5860770870597755/8012452890",
+                new AdRequest.Builder().build());
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+        loadRewardedVideoAd();
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+    }
+
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+    }
+
+    @Override
+    public void onRewardedVideoCompleted() {
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        mRewardedVideoAd.resume(this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        mRewardedVideoAd.pause(this);
+        super.onPause();
+    }
+
     @Override
     public void onDestroy() {
+        mRewardedVideoAd.destroy(this);
         super.onDestroy();
         noInternetDialog.onDestroy();
     }

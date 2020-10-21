@@ -18,7 +18,6 @@ import com.google.android.gms.ads.appopen.AppOpenAd;
 import java.util.Date;
 
 import tbc.uncagedmist.rationcard.Common.MyApplicationClass;
-import tbc.uncagedmist.rationcard.R;
 
 import static androidx.lifecycle.Lifecycle.Event.ON_START;
 
