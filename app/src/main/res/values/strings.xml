@@ -23,4 +23,6 @@
     <string name="identity">Get All the Information about \n your Personal Identification Card \n Like : Aadhaar Card, Pan Card, \n Voter ID etc...</string>
     <string name="services">It notifies you about \n all the Current and Upcoming \n Job, Government Services etc..</string>
     <string name="updated">Always stay Updated without \n lacking any Benefits.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

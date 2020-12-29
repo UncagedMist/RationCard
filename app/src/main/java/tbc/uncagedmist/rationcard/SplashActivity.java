@@ -6,7 +6,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -39,6 +41,9 @@ public class SplashActivity extends AppCompatActivity {
 
     NoInternetDialog noInternetDialog;
 
+    private static int SPLASH_TIME_OUT = 5000;
+    SharedPreferences mSharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +60,25 @@ public class SplashActivity extends AppCompatActivity {
 
         setAdapter();
         setupAnimation();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSharedPref = getSharedPreferences("SharedPref",MODE_PRIVATE);
+                boolean isFirstTime = mSharedPref.getBoolean("firstTime",true);
+
+                if (isFirstTime)    {
+                    SharedPreferences.Editor editor = mSharedPref.edit();
+                    editor.putBoolean("firstTime",false);
+                    editor.commit();
+                }
+                else    {
+                    Intent intent = new Intent(SplashActivity.this,StateActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        },SPLASH_TIME_OUT);
 
         final AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(SplashActivity.this);
         Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();

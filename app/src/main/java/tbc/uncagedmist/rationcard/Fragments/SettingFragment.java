@@ -1,31 +1,28 @@
-package tbc.uncagedmist.rationcard;
-
-import androidx.appcompat.app.AppCompatActivity;
+package tbc.uncagedmist.rationcard.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.special.ResideMenu.ResideMenu;
-import com.special.ResideMenu.ResideMenuItem;
 
 import am.appwise.components.ni.NoInternetDialog;
+import tbc.uncagedmist.rationcard.R;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ResideMenu resideMenu;
-    private ResideMenuItem itemHome;
-    private ResideMenuItem itemAbout;
-    private ResideMenuItem itemPrivacy;
-    private ResideMenuItem itemSettings;
+public class SettingFragment extends Fragment {
+
+    View myFragment;
 
     FloatingActionButton settingShare;
 
@@ -34,28 +31,23 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     NoInternetDialog noInternetDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-        noInternetDialog = new NoInternetDialog.Builder(SettingActivity.this).build();
+        myFragment = inflater.inflate(R.layout.fragment_setting, container, false);
 
-        settingAboveBanner = findViewById(R.id.settingAboveBanner);
-        settingBottomBanner = findViewById(R.id.settingBottomBanner);
+        noInternetDialog = new NoInternetDialog.Builder(getContext()).build();
 
-        TextView txtTitle = findViewById(R.id.txtTitle);
 
-        txtTitle.setText("Setting");
+        settingAboveBanner = myFragment.findViewById(R.id.settingAboveBanner);
+        settingBottomBanner = myFragment.findViewById(R.id.settingBottomBanner);
 
         AdRequest adRequest = new AdRequest.Builder().build();
 
         settingAboveBanner.loadAd(adRequest);
         settingBottomBanner.loadAd(adRequest);
 
-
-        setUpMenu();
-
-        settingShare = findViewById(R.id.settingShare);
+        settingShare = myFragment.findViewById(R.id.settingShare);
 
         settingShare.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,78 +127,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 // to the app after tapping on an ad.
             }
         });
+
+        return myFragment;
     }
-
-    private void setUpMenu() {
-
-        resideMenu = new ResideMenu(this);
-//        resideMenu.setUse3D(true);
-        resideMenu.setBackground(R.drawable.menu_background);
-        resideMenu.attachToActivity(this);
-        resideMenu.setMenuListener(menuListener);
-
-        resideMenu.setScaleValue(0.6f);
-
-        itemHome     = new ResideMenuItem(this, R.drawable.icon_home,     "Home");
-        itemAbout  = new ResideMenuItem(this, R.drawable.icon_profile,  "About");
-        itemPrivacy = new ResideMenuItem(this, R.drawable.icon_profile, "Privacy");
-        itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "Settings");
-
-        itemHome.setOnClickListener(this);
-        itemAbout.setOnClickListener(this);
-        itemPrivacy.setOnClickListener(this);
-        itemSettings.setOnClickListener(this);
-
-        resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemAbout, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemPrivacy, ResideMenu.DIRECTION_RIGHT);
-        resideMenu.addMenuItem(itemSettings, ResideMenu.DIRECTION_RIGHT);
-
-        findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
-            }
-        });
-        findViewById(R.id.title_bar_right_menu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
-            }
-        });
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return resideMenu.dispatchTouchEvent(ev);
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        if (view == itemHome){
-
-        }else if (view == itemAbout){
-            startActivity(new Intent(SettingActivity.this,AboutActivity.class));
-
-        }else if (view == itemPrivacy){
-            startActivity(new Intent(SettingActivity.this,PrivacyActivity.class));
-
-        }else if (view == itemSettings){
-        }
-
-        resideMenu.closeMenu();
-    }
-
-    private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
-        @Override
-        public void openMenu() {
-        }
-
-        @Override
-        public void closeMenu() {
-        }
-    };
 
     @Override
     public void onDestroy() {

@@ -1,13 +1,14 @@
-package tbc.uncagedmist.rationcard;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+package tbc.uncagedmist.rationcard.Fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.MotionEvent;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -15,19 +16,19 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.special.ResideMenu.ResideMenu;
-import com.special.ResideMenu.ResideMenuItem;
 
 import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.Common.Common;
+import tbc.uncagedmist.rationcard.R;
 import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
 import tbc.uncagedmist.rationcard.Utility.CustomProgressDialog;
 
-public class PrivacyActivity extends AppCompatActivity implements View.OnClickListener {
+public class PrivacyFragment extends Fragment {
+
+    View myFragment;
 
     WebView webView;
 
@@ -40,42 +41,24 @@ public class PrivacyActivity extends AppCompatActivity implements View.OnClickLi
     CustomLoadDialog loadDialog;
     CustomProgressDialog progressDialog;
 
-    private ResideMenu resideMenu;
-    private ResideMenuItem itemHome;
-    private ResideMenuItem itemAbout;
-    private ResideMenuItem itemPrivacy;
-    private ResideMenuItem itemSettings;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_privacy);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-        loadDialog = new CustomLoadDialog(this);
-        progressDialog = new CustomProgressDialog(this);
+        myFragment =  inflater.inflate(R.layout.fragment_privacy, container, false);
+
+        loadDialog = new CustomLoadDialog(getContext());
+        progressDialog = new CustomProgressDialog(getContext());
 
         loadDialog.showDialog();
 
-        noInternetDialog = new NoInternetDialog.Builder(PrivacyActivity.this).build();
+        noInternetDialog = new NoInternetDialog.Builder(getContext()).build();
 
-        webView = findViewById(R.id.webPrivacy);
-        privacyAboveBanner = findViewById(R.id.privacyAboveBanner);
-        privacyBottomBanner = findViewById(R.id.privacyBottomBanner);
+        webView = myFragment.findViewById(R.id.webPrivacy);
+        privacyAboveBanner = myFragment.findViewById(R.id.privacyAboveBanner);
+        privacyBottomBanner = myFragment.findViewById(R.id.privacyBottomBanner);
 
-        privacyShare = findViewById(R.id.privacyShare);
-
-        TextView txtTitle = findViewById(R.id.txtTitle);
-
-        txtTitle.setText("Privacy Policy");
-
-//        privacyAboveBanner.setAdSize(AdSize.BANNER);
-//        privacyAboveBanner.setAdUnitId(getResources().getString(R.string.Banner_Privacy));
-//
-//        privacyBottomBanner.setAdSize(AdSize.BANNER);
-//        privacyBottomBanner.setAdUnitId(getResources().getString(R.string.Banner_Privacy_Bottom));
-
-
-        setUpMenu();
+        privacyShare = myFragment.findViewById(R.id.privacyShare);
 
         AdRequest adRequest = new AdRequest.Builder().build();
 
@@ -172,7 +155,10 @@ public class PrivacyActivity extends AppCompatActivity implements View.OnClickLi
                 // to the app after tapping on an ad.
             }
         });
+
+        return myFragment;
     }
+
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -195,77 +181,6 @@ public class PrivacyActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
     }
-
-    private void setUpMenu() {
-
-        resideMenu = new ResideMenu(this);
-//        resideMenu.setUse3D(true);
-        resideMenu.setBackground(R.drawable.menu_background);
-        resideMenu.attachToActivity(this);
-        resideMenu.setMenuListener(menuListener);
-
-        resideMenu.setScaleValue(0.6f);
-
-        itemHome     = new ResideMenuItem(this, R.drawable.icon_home,     "Home");
-        itemAbout  = new ResideMenuItem(this, R.drawable.icon_profile,  "About");
-        itemPrivacy = new ResideMenuItem(this, R.drawable.icon_profile, "Privacy");
-        itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "Settings");
-
-        itemHome.setOnClickListener(this);
-        itemAbout.setOnClickListener(this);
-        itemPrivacy.setOnClickListener(this);
-        itemSettings.setOnClickListener(this);
-
-        resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemAbout, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemPrivacy, ResideMenu.DIRECTION_RIGHT);
-        resideMenu.addMenuItem(itemSettings, ResideMenu.DIRECTION_RIGHT);
-
-        findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
-            }
-        });
-        findViewById(R.id.title_bar_right_menu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
-            }
-        });
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return resideMenu.dispatchTouchEvent(ev);
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        if (view == itemHome){
-
-        }else if (view == itemAbout){
-            startActivity(new Intent(PrivacyActivity.this,AboutActivity.class));
-
-        }else if (view == itemPrivacy){
-
-        }else if (view == itemSettings){
-            startActivity(new Intent(PrivacyActivity.this,SettingActivity.class));
-        }
-
-        resideMenu.closeMenu();
-    }
-
-    private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
-        @Override
-        public void openMenu() {
-        }
-
-        @Override
-        public void closeMenu() {
-        }
-    };
 
     @Override
     public void onDestroy() {

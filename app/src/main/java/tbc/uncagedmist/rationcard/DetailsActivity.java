@@ -11,17 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.LoadAdError;
@@ -36,8 +31,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.special.ResideMenu.ResideMenu;
-import com.special.ResideMenu.ResideMenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,14 +42,12 @@ import tbc.uncagedmist.rationcard.Interface.IDetailsLoadListener;
 import tbc.uncagedmist.rationcard.Model.Detail;
 import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
 
-public class DetailsActivity extends AppCompatActivity implements IDetailsLoadListener,View.OnClickListener {
+public class DetailsActivity extends AppCompatActivity implements IDetailsLoadListener{
 
     AdView aboveDetailBanner, bottomDetailBanner;
     RecyclerView recyclerDetail;
 
     CollectionReference refDetails;
-
-    TextView txtTitle;
 
     FloatingActionButton detailShare;
 
@@ -68,11 +59,7 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
 
     private InterstitialAd mInterstitialAd;
 
-    private ResideMenu resideMenu;
-    private ResideMenuItem itemHome;
-    private ResideMenuItem itemAbout;
-    private ResideMenuItem itemPrivacy;
-    private ResideMenuItem itemSettings;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,17 +81,16 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
 
         });
 
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        toolbar.setTitle(Common.CurrentState.getName());
+
         recyclerDetail = findViewById(R.id.recycler_detail);
         aboveDetailBanner = findViewById(R.id.detailAboveBanner);
         bottomDetailBanner = findViewById(R.id.detailBelowBanner);
 
         detailShare = findViewById(R.id.detailShare);
-
-        txtTitle = findViewById(R.id.txtTitle);
-
-        txtTitle.setText(Common.CurrentState.getName());
-
-        setUpMenu();
 
         AdRequest adRequest = new AdRequest.Builder().build();
 
@@ -228,6 +214,8 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
         });
     }
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -239,6 +227,7 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
                 }
                 noInternetDialog = new NoInternetDialog.Builder(DetailsActivity.this).build();
                 loadInterstitial();
+                toolbar.setTitle(Common.CurrentState.getName());
                 getAllDetails();
             }
         });
@@ -299,77 +288,6 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
         Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
     }
 
-    private void setUpMenu() {
-
-        resideMenu = new ResideMenu(this);
-//        resideMenu.setUse3D(true);
-        resideMenu.setBackground(R.drawable.menu_background);
-        resideMenu.attachToActivity(this);
-        resideMenu.setMenuListener(menuListener);
-
-        resideMenu.setScaleValue(0.6f);
-
-        itemHome     = new ResideMenuItem(this, R.drawable.icon_home,     "Home");
-        itemAbout  = new ResideMenuItem(this, R.drawable.icon_profile,  "About");
-        itemPrivacy = new ResideMenuItem(this, R.drawable.icon_profile, "Privacy");
-        itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "Settings");
-
-        itemHome.setOnClickListener(this);
-        itemAbout.setOnClickListener(this);
-        itemPrivacy.setOnClickListener(this);
-        itemSettings.setOnClickListener(this);
-
-        resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemAbout, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemPrivacy, ResideMenu.DIRECTION_RIGHT);
-        resideMenu.addMenuItem(itemSettings, ResideMenu.DIRECTION_RIGHT);
-
-        findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
-            }
-        });
-        findViewById(R.id.title_bar_right_menu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
-            }
-        });
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return resideMenu.dispatchTouchEvent(ev);
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        if (view == itemHome){
-
-        }else if (view == itemAbout){
-            startActivity(new Intent(DetailsActivity.this,AboutActivity.class));
-
-        }else if (view == itemPrivacy){
-            startActivity(new Intent(DetailsActivity.this,PrivacyActivity.class));
-
-        }else if (view == itemSettings){
-            startActivity(new Intent(DetailsActivity.this,SettingActivity.class));
-        }
-
-        resideMenu.closeMenu();
-    }
-
-    private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
-        @Override
-        public void openMenu() {
-        }
-
-        @Override
-        public void closeMenu() {
-        }
-    };
 
     @Override
     public void onDestroy() {
