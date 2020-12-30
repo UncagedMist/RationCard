@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.widget.Toast;
 
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog;
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialogListener;
@@ -58,6 +59,8 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        wishNewYear();
+
         slidingRootNav = new SlidingRootNavBuilder(this)
                 .withDragDistance(180)
                 .withRootViewScale(0.75f)
@@ -94,9 +97,24 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
         adapter.setSelected(POS_HOME);
     }
 
+    private void wishNewYear() {
+        new TTFancyGifDialog.Builder(StateActivity.this)
+                .setTitle("Happy New Year 2021")
+                .setMessage("May every day of the new year inspire you to grow!")
+                .setPositiveBtnText("Thanks")
+                .setPositiveBtnBackground("#22b573")
+                .setGifResource(R.drawable.happy)
+                .isCancellable(false)
+                .OnPositiveClicked(new TTFancyGifDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        Toast.makeText(StateActivity.this, "Thanks for Supporting US!", Toast.LENGTH_SHORT).show();
+                    }
+                }).build();
+    }
+
     @Override
     public void onBackPressed() {
-
     }
 
     private DrawerItem createItemFor(int position)  {
