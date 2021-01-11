@@ -69,7 +69,7 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
 
         getSupportActionBar().setTitle(R.string.title);
 
-        wishNewYear();
+        wishFestival();
 
         slidingRootNav = new SlidingRootNavBuilder(this)
                 .withDragDistance(180)
@@ -105,13 +105,13 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
         adapter.setSelected(POS_HOME);
     }
 
-    private void wishNewYear() {
+    private void wishFestival() {
         new TTFancyGifDialog.Builder(StateActivity.this)
-                .setTitle("Happy New Year 2021")
-                .setMessage("May every day of the new year inspire you to grow!")
+                .setTitle("Happy Makar Sankranti 2021")
+                .setMessage("Wishing that the rising sun of Makar Sankranti fills your life with bright and happy moments :)")
                 .setPositiveBtnText("Thanks")
                 .setPositiveBtnBackground("#22b573")
-                .setGifResource(R.drawable.happy)
+                .setGifResource(R.drawable.makar)
                 .isCancellable(false)
                 .OnPositiveClicked(new TTFancyGifDialogListener() {
                     @Override

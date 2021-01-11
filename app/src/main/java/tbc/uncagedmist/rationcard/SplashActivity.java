@@ -41,7 +41,7 @@ public class SplashActivity extends AppCompatActivity {
 
     NoInternetDialog noInternetDialog;
 
-    private static int SPLASH_TIME_OUT = 5000;
+    private static final int SPLASH_TIME_OUT = 5000;
     SharedPreferences mSharedPref;
 
     @Override
