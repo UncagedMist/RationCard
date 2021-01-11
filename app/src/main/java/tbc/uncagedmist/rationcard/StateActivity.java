@@ -2,7 +2,7 @@ package tbc.uncagedmist.rationcard;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -10,18 +10,21 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.widget.Toast;
 
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog;
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialogListener;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.OnSuccessListener;
+import com.google.android.play.core.tasks.Task;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
@@ -37,6 +40,9 @@ import tbc.uncagedmist.rationcard.Model.SimpleItem;
 import tbc.uncagedmist.rationcard.Model.SpaceItem;
 
 public class StateActivity extends AppCompatActivity implements  DrawerAdapter.OnItemSelectedListener {
+
+    ReviewManager manager;
+    ReviewInfo reviewInfo;
 
     public static final int POS_CLOSE = 0;
     public static final int POS_HOME = 1;
@@ -56,8 +62,12 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_state);
 
+        manager = ReviewManagerFactory.create(StateActivity.this);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setTitle(R.string.title);
 
         wishNewYear();
 
@@ -71,8 +81,6 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
                 .withSavedState(savedInstanceState)
                 .withMenuLayout(R.layout.drawer_menu)
                 .inject();
-
-        getSupportActionBar().setTitle(R.string.title);
 
         screenIcons = loadScreenIcons();
         screenTitles = loadScreenTitles();
@@ -115,6 +123,26 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
 
     @Override
     public void onBackPressed() {
+        new TTFancyGifDialog.Builder(StateActivity.this)
+                .setTitle("Sarkari Sahayata")
+                .setMessage("Support us by downloading our other apps!")
+                .setPositiveBtnText("Support")
+                .setPositiveBtnBackground("#22b573")
+                .setNegativeBtnText("Don't")
+                .setNegativeBtnBackground("#c1272d")
+                .setGifResource(R.drawable.ic_logo)
+                .isCancellable(false)
+                .OnPositiveClicked(new TTFancyGifDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.sarkarisahayata")));
+                    }
+                })
+                .OnNegativeClicked(new TTFancyGifDialogListener() {
+                    @Override
+                    public void OnClick() {
+                    }
+                }).build();
     }
 
     private DrawerItem createItemFor(int position)  {
@@ -182,29 +210,28 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
     }
 
     private void rateUS() {
-        new TTFancyGifDialog.Builder(StateActivity.this)
-                .setTitle("Feedback")
-                .setMessage("Your Feedback is important to us.")
-                .setPositiveBtnText("Feedback")
-                .setPositiveBtnBackground("#22b573")
-                .setNegativeBtnText("Exit")
-                .setNegativeBtnBackground("#c1272d")
-                .setGifResource(R.drawable.feed)
-                .isCancellable(false)
-                .OnPositiveClicked(new TTFancyGifDialogListener() {
-                    @Override
-                    public void OnClick() {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.rationcard")));
-                    }
-                })
-                .OnNegativeClicked(new TTFancyGifDialogListener() {
-                    @Override
-                    public void OnClick() {
-                        moveTaskToBack(true);
-                        android.os.Process.killProcess(android.os.Process.myPid());
-                        System.exit(1);
-                    }
-                }).build();
+        Task<ReviewInfo> request = manager.requestReviewFlow();
+
+        request.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+            @Override
+            public void onComplete(@NonNull Task<ReviewInfo> task) {
+                if (task.isSuccessful())    {
+                    reviewInfo = task.getResult();
+
+                    Task<Void> flow = manager.launchReviewFlow(StateActivity.this,reviewInfo);
+
+                    flow.addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void result) {
+
+                        }
+                    });
+                }
+                else {
+                    Toast.makeText(StateActivity.this, "ERROR...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 

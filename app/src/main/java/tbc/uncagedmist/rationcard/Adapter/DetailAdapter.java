@@ -1,5 +1,6 @@
 package tbc.uncagedmist.rationcard.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -58,6 +59,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
                 Intent intent = new Intent(context, ResultActivity.class);
                 Common.CurrentDetail = detailList.get(position);
                 context.startActivity(intent);
+                ((Activity)context).finish();
             }
         });
     }

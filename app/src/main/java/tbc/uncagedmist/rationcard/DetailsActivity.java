@@ -59,8 +59,6 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
 
     private InterstitialAd mInterstitialAd;
 
-    Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,10 +79,10 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
 
         });
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setTitle(Common.CurrentState.getName());
+        getSupportActionBar().setTitle(Common.CurrentState.getName());
 
         recyclerDetail = findViewById(R.id.recycler_detail);
         aboveDetailBanner = findViewById(R.id.detailAboveBanner);
@@ -227,7 +225,7 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
                 }
                 noInternetDialog = new NoInternetDialog.Builder(DetailsActivity.this).build();
                 loadInterstitial();
-                toolbar.setTitle(Common.CurrentState.getName());
+                getSupportActionBar().setTitle(Common.CurrentState.getName());
                 getAllDetails();
             }
         });

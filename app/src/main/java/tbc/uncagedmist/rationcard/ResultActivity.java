@@ -1,5 +1,6 @@
 package tbc.uncagedmist.rationcard;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -10,6 +11,8 @@ import android.os.Bundle;
 
 import android.view.View;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -21,6 +24,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.monstertechno.adblocker.AdBlockerWebView;
+import com.monstertechno.adblocker.util.AdBlocker;
 
 import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.Common.Common;
@@ -39,8 +44,6 @@ public class ResultActivity extends AppCompatActivity  {
     CustomLoadDialog loadDialog;
     CustomProgressDialog progressDialog;
 
-    Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +56,10 @@ public class ResultActivity extends AppCompatActivity  {
 
         noInternetDialog = new NoInternetDialog.Builder(ResultActivity.this).build();
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setTitle(Common.CurrentDetail.getName());
 
         webView = findViewById(R.id.webResult);
 
@@ -64,7 +69,7 @@ public class ResultActivity extends AppCompatActivity  {
         resultShare = findViewById(R.id.resultShare);
         resultBack = findViewById(R.id.resultBack);
 
-        toolbar.setTitle(Common.CurrentDetail.getName());
+        new AdBlockerWebView.init(this).initializeWebView(webView);
 
         AdRequest adRequest = new AdRequest.Builder().build();
 
@@ -173,6 +178,15 @@ public class ResultActivity extends AppCompatActivity  {
     }
 
     private class MyWebViewClient extends WebViewClient {
+
+        MyWebViewClient() {}
+
+        @Nullable
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+            return AdBlockerWebView.blockAds(view,url) ? AdBlocker.createEmptyResource() :
+                    super.shouldInterceptRequest(view, url);
+        }
 
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
