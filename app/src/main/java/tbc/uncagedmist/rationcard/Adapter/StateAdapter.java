@@ -2,6 +2,7 @@ package tbc.uncagedmist.rationcard.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -31,10 +35,13 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
     List<State> stateList;
     List<CardView> cardViewList;
 
+    private InterstitialAd mInterstitialAd;
+
     public StateAdapter(Context context, List<State> stateList) {
         this.context = context;
         this.stateList = stateList;
         cardViewList = new ArrayList<>();
+
     }
 
     @NonNull
@@ -42,6 +49,19 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
     public StateAdapter.StateViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.layout_states,parent,false);
+
+        mInterstitialAd = new InterstitialAd(context);
+        mInterstitialAd.setAdUnitId("ca-app-pub-5860770870597755/8496470950");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+        });
 
         return new StateViewHolder(view);
     }
@@ -57,9 +77,15 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
         holder.cardStates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, DetailsActivity.class);
-                Common.CurrentState = stateList.get(position);
-                context.startActivity(intent);
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                }
+                else {
+                    Log.d("Ad Error", "Ad Not Loaded ");
+                    Intent intent = new Intent(context, DetailsActivity.class);
+                    Common.CurrentState = stateList.get(position);
+                    context.startActivity(intent);
+                }
             }
         });
     }

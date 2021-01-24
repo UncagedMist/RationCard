@@ -69,7 +69,7 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
 
         getSupportActionBar().setTitle(R.string.title);
 
-        wishFestival();
+//        wishFestival();
 
         slidingRootNav = new SlidingRootNavBuilder(this)
                 .withDragDistance(180)
