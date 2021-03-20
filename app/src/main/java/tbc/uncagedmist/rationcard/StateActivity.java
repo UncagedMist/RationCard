@@ -67,7 +67,7 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle(R.string.title);
+//        getSupportActionBar().setTitle(R.string.title);
 
 //        wishFestival();
 
@@ -105,21 +105,21 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
         adapter.setSelected(POS_HOME);
     }
 
-    private void wishFestival() {
-        new TTFancyGifDialog.Builder(StateActivity.this)
-                .setTitle("Happy Makar Sankranti 2021")
-                .setMessage("Wishing that the rising sun of Makar Sankranti fills your life with bright and happy moments :)")
-                .setPositiveBtnText("Thanks")
-                .setPositiveBtnBackground("#22b573")
-                .setGifResource(R.drawable.makar)
-                .isCancellable(false)
-                .OnPositiveClicked(new TTFancyGifDialogListener() {
-                    @Override
-                    public void OnClick() {
-                        Toast.makeText(StateActivity.this, "Thanks for Supporting US!", Toast.LENGTH_SHORT).show();
-                    }
-                }).build();
-    }
+//    private void wishFestival() {
+//        new TTFancyGifDialog.Builder(StateActivity.this)
+//                .setTitle("Happy Makar Sankranti 2021")
+//                .setMessage("Wishing that the rising sun of Makar Sankranti fills your life with bright and happy moments :)")
+//                .setPositiveBtnText("Thanks")
+//                .setPositiveBtnBackground("#22b573")
+//                .setGifResource(R.drawable.makar)
+//                .isCancellable(false)
+//                .OnPositiveClicked(new TTFancyGifDialogListener() {
+//                    @Override
+//                    public void OnClick() {
+//                        Toast.makeText(StateActivity.this, "Thanks for Supporting US!", Toast.LENGTH_SHORT).show();
+//                    }
+//                }).build();
+//    }
 
     @Override
     public void onBackPressed() {

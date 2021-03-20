@@ -3,7 +3,6 @@ package tbc.uncagedmist.rationcard.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,26 +20,23 @@ import com.google.android.gms.ads.LoadAdError;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.Interface.IRecyclerItemSelectListener;
-import tbc.uncagedmist.rationcard.Model.Detail;
+import tbc.uncagedmist.rationcard.Model.Product;
 import tbc.uncagedmist.rationcard.R;
 import tbc.uncagedmist.rationcard.ResultActivity;
 
 public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailViewHolder> {
 
     Context context;
-    List<Detail> detailList;
-    List<CardView> cardViewList;
+    ArrayList<Product> products;
 
     private InterstitialAd mInterstitialAd;
 
-    public DetailAdapter(Context context, List<Detail> detailList) {
+    public DetailAdapter(Context context, ArrayList<Product> products) {
         this.context = context;
-        this.detailList = detailList;
-        cardViewList = new ArrayList<>();
+        this.products = products;
     }
 
     @NonNull
@@ -68,10 +64,10 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
     @Override
     public void onBindViewHolder(@NonNull DetailAdapter.DetailViewHolder holder, final int position) {
         Picasso.get()
-                .load(detailList.get(position).getImage())
+                .load(products.get(position).getProductImage())
                 .into(holder.detailImage);
 
-        holder.detailName.setText(detailList.get(position).getName());
+        holder.detailName.setText(products.get(position).getProductName());
 
         holder.cardDetails.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,9 +76,9 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
                     mInterstitialAd.show();
                 }
                 else {
-                    Log.d("Ad Error", "Ad Not Loaded ");
                     Intent intent = new Intent(context, ResultActivity.class);
-                    Common.CurrentDetail = detailList.get(position);
+                    Common.CurrentProductUrl = products.get(position).getProductUrl();
+                    Common.CurrentProductName = products.get(position).getProductName();
                     context.startActivity(intent);
                     ((Activity)context).finish();
                 }
@@ -128,7 +124,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
 
     @Override
     public int getItemCount() {
-        return detailList.size();
+        return products.size();
     }
 
     public class DetailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

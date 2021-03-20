@@ -59,7 +59,7 @@ public class ResultActivity extends AppCompatActivity  {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle(Common.CurrentDetail.getName());
+        getSupportActionBar().setTitle(Common.CurrentProductName);
 
         webView = findViewById(R.id.webResult);
 
@@ -78,7 +78,7 @@ public class ResultActivity extends AppCompatActivity  {
 
         webView.setWebViewClient(new MyWebViewClient());
 
-        String url = Common.CurrentDetail.getWeb().trim();
+        String url = Common.CurrentProductUrl.trim();
 
         resultShare.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -23,7 +23,7 @@ public class CustomProgressDialog {
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.load_layout);
+        dialog.setContentView(R.layout.progress_layout);
 
         ImageView gifImageView = dialog.findViewById(R.id.gifImageView);
 

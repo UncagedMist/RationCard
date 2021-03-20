@@ -1,77 +1,75 @@
 package tbc.uncagedmist.rationcard;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
-
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.Adapter.DetailAdapter;
 import tbc.uncagedmist.rationcard.Common.Common;
-import tbc.uncagedmist.rationcard.Interface.IDetailsLoadListener;
-import tbc.uncagedmist.rationcard.Model.Detail;
+import tbc.uncagedmist.rationcard.Database.MyDatabase;
+import tbc.uncagedmist.rationcard.Model.Product;
 import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
 
-public class DetailsActivity extends AppCompatActivity implements IDetailsLoadListener{
+public class DetailsActivity extends AppCompatActivity {
 
     AdView aboveDetailBanner, bottomDetailBanner;
-    RecyclerView recyclerDetail;
 
-    CollectionReference refDetails;
+    RecyclerView recyclerView;
+    ArrayList<Product> productArrayList = new ArrayList<>();
 
     FloatingActionButton detailShare;
 
-    IDetailsLoadListener iDetailsLoadListener;
-
-    CustomLoadDialog loadDialog;
-
     NoInternetDialog noInternetDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        loadDialog = new CustomLoadDialog(this);
-
+        noInternetDialog = new NoInternetDialog.Builder(DetailsActivity.this).build();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle(Common.CurrentState.getName());
+        getSupportActionBar().setTitle(Common.CurrentStateName);
 
-        recyclerDetail = findViewById(R.id.recycler_detail);
+        recyclerView = findViewById(R.id.recycler_detail);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         aboveDetailBanner = findViewById(R.id.detailAboveBanner);
         bottomDetailBanner = findViewById(R.id.detailBelowBanner);
 
         detailShare = findViewById(R.id.detailShare);
+
+        Cursor cursor = new MyDatabase(this).getAllProductsByStateId(Common.CurrentStateId);
+
+        while (cursor.moveToNext()) {
+            Product product = new Product(
+                    cursor.getString(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4)
+            );
+            productArrayList.add(product);
+        }
+
+        DetailAdapter adapter = new DetailAdapter(this,productArrayList);
+        recyclerView.setAdapter(adapter);
 
         AdRequest adRequest = new AdRequest.Builder().build();
 
@@ -88,9 +86,7 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
                 startActivity(Intent.createChooser(intent, "Share One Ration Card App Using"));
             }
         });
-        getAllDetails();
 
-        iDetailsLoadListener = this;
 
         aboveDetailBanner.setAdListener(new AdListener() {
             @Override
@@ -160,72 +156,6 @@ public class DetailsActivity extends AppCompatActivity implements IDetailsLoadLi
             }
         });
     }
-
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        refDetails.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null)  {
-                    return;
-                }
-                noInternetDialog = new NoInternetDialog.Builder(DetailsActivity.this).build();
-                getSupportActionBar().setTitle(Common.CurrentState.getName());
-                getAllDetails();
-            }
-        });
-    }
-
-    private void getAllDetails() {
-        loadDialog.showDialog();
-        refDetails = FirebaseFirestore.getInstance()
-                .collection("Sarkari")
-                .document(Common.STATE_ID)
-                .collection("Services")
-                .document(Common.CurrentState.getId())
-                .collection("Details");
-
-        refDetails
-                .orderBy("name", Query.Direction.ASCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        List<Detail> details = new ArrayList<>();
-                        if (task.isSuccessful())    {
-                            for (QueryDocumentSnapshot detailSnapshot : task.getResult())   {
-                                Detail detail = detailSnapshot.toObject(Detail.class);
-                                detail.setId(detailSnapshot.getId());
-                                details.add(detail);
-                            }
-                            iDetailsLoadListener.onDetailLoadSuccess(details);
-                            loadDialog.hideDialog();
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                iDetailsLoadListener.onDetailLoadFailed(e.getMessage());
-            }
-        });
-    }
-
-    @Override
-    public void onDetailLoadSuccess(List<Detail> details) {
-        recyclerDetail.setHasFixedSize(true);
-        recyclerDetail.setLayoutManager(new LinearLayoutManager(this));
-
-        recyclerDetail.setAdapter(new DetailAdapter(this,details));
-    }
-
-    @Override
-    public void onDetailLoadFailed(String message) {
-        Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
-    }
-
 
     @Override
     public void onDestroy() {

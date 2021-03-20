@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/card_states"
     android:orientation="vertical"
-    android:layout_margin="5dp"
+    android:layout_margin="2dp"
     app:cardElevation="10dp"
     app:cardCornerRadius="8dp">
 

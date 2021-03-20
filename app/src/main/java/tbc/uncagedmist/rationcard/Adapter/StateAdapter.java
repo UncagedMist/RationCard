@@ -2,7 +2,6 @@ package tbc.uncagedmist.rationcard.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,29 +18,23 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.DetailsActivity;
 import tbc.uncagedmist.rationcard.Interface.IRecyclerItemSelectListener;
-import tbc.uncagedmist.rationcard.Interface.IStateLoadListener;
 import tbc.uncagedmist.rationcard.Model.State;
 import tbc.uncagedmist.rationcard.R;
-import tbc.uncagedmist.rationcard.StateActivity;
 
 public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHolder> {
 
     Context context;
-    List<State> stateList;
-    List<CardView> cardViewList;
+    ArrayList<State> states;
 
     private InterstitialAd mInterstitialAd;
 
-    public StateAdapter(Context context, List<State> stateList) {
+    public StateAdapter(Context context, ArrayList<State> states) {
         this.context = context;
-        this.stateList = stateList;
-        cardViewList = new ArrayList<>();
-
+        this.states = states;
     }
 
     @NonNull
@@ -69,10 +62,10 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
     @Override
     public void onBindViewHolder(@NonNull StateAdapter.StateViewHolder holder, final int position) {
         Picasso.get()
-                .load(stateList.get(position).getImage())
+                .load(states.get(position).getStateImage())
                 .into(holder.stateImage);
 
-        holder.stateName.setText(stateList.get(position).getName());
+        holder.stateName.setText(states.get(position).getStateName());
 
         holder.cardStates.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,9 +74,9 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
                     mInterstitialAd.show();
                 }
                 else {
-                    Log.d("Ad Error", "Ad Not Loaded ");
                     Intent intent = new Intent(context, DetailsActivity.class);
-                    Common.CurrentState = stateList.get(position);
+                    Common.CurrentStateId = states.get(position).getStateId();
+                    Common.CurrentStateName = states.get(position).getStateName();
                     context.startActivity(intent);
                 }
             }
@@ -92,7 +85,7 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
 
     @Override
     public int getItemCount() {
-        return stateList.size();
+        return states.size();
     }
 
     public class StateViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

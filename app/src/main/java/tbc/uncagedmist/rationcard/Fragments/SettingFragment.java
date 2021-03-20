@@ -1,6 +1,5 @@
 package tbc.uncagedmist.rationcard.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,23 +7,18 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.R;
 
-
 public class SettingFragment extends Fragment {
 
     View myFragment;
-
-    FloatingActionButton settingShare;
 
     AdView settingAboveBanner, settingBottomBanner;
 
@@ -47,18 +41,7 @@ public class SettingFragment extends Fragment {
         settingAboveBanner.loadAd(adRequest);
         settingBottomBanner.loadAd(adRequest);
 
-        settingShare = myFragment.findViewById(R.id.settingShare);
 
-        settingShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                String message = "Never Miss A Thing About Ration Card. Install One Ration Card App and Stay Updated! \n https://play.google.com/store/apps/details?id=tbc.uncagedmist.rationcard";
-                intent.putExtra(Intent.EXTRA_TEXT, message);
-                startActivity(Intent.createChooser(intent, "Share One Ration Card App Using"));
-            }
-        });
 
         settingAboveBanner.setAdListener(new AdListener() {
             @Override

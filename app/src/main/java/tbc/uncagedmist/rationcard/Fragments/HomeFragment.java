@@ -1,58 +1,48 @@
 package tbc.uncagedmist.rationcard.Fragments;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.Adapter.StateAdapter;
-import tbc.uncagedmist.rationcard.Common.Common;
-import tbc.uncagedmist.rationcard.Interface.IStateLoadListener;
+import tbc.uncagedmist.rationcard.Database.MyDatabase;
 import tbc.uncagedmist.rationcard.Model.State;
 import tbc.uncagedmist.rationcard.R;
-import tbc.uncagedmist.rationcard.StateActivity;
-import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
 
-public class HomeFragment extends Fragment implements IStateLoadListener {
+public class HomeFragment extends Fragment  {
 
     AdView aboveStateBanner, bottomStateBanner;
-    RecyclerView recyclerState;
+
+    RecyclerView recyclerView;
+    ArrayList<State> stateArrayList = new ArrayList<>();
 
     FloatingActionButton stateShare;
-    CollectionReference refAllStates;
-
-    IStateLoadListener iStateLoadListener;
-
-    CustomLoadDialog loadDialog;
 
     NoInternetDialog noInternetDialog;
 
@@ -62,11 +52,18 @@ public class HomeFragment extends Fragment implements IStateLoadListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         myFragment = inflater.inflate(R.layout.fragment_home, container, false);
+        setHasOptionsMenu(true);
 
-        loadDialog = new CustomLoadDialog(getContext());
         noInternetDialog = new NoInternetDialog.Builder(getContext()).build();
 
-        recyclerState = myFragment.findViewById(R.id.recyclerState);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+
+        Toolbar toolbar = myFragment.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("One Nation One Ration");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        recyclerView = myFragment.findViewById(R.id.recyclerState);
 
         stateShare = myFragment.findViewById(R.id.stateShare);
 
@@ -78,7 +75,21 @@ public class HomeFragment extends Fragment implements IStateLoadListener {
         aboveStateBanner.loadAd(adRequest);
         bottomStateBanner.loadAd(adRequest);
 
-        getAllStateList();
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+
+        Cursor cursor = new MyDatabase(getContext()).getAllStateData();
+
+        while (cursor.moveToNext()) {
+            State state = new State(
+                    cursor.getString(0),
+                    cursor.getString(1),
+                    cursor.getString(2)
+            );
+            stateArrayList.add(state);
+        }
+
+        StateAdapter adapter = new StateAdapter(getContext(),stateArrayList);
+        recyclerView.setAdapter(adapter);
 
         stateShare.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +102,6 @@ public class HomeFragment extends Fragment implements IStateLoadListener {
             }
         });
 
-        iStateLoadListener = this;
 
         aboveStateBanner.setAdListener(new AdListener() {
             @Override
@@ -164,65 +174,51 @@ public class HomeFragment extends Fragment implements IStateLoadListener {
         return myFragment;
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        refAllStates.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                if (error != null)  {
-//                    return;
-//                }
-//                noInternetDialog = new NoInternetDialog.Builder(getContext()).build();
-//                getAllStateList();
-//            }
-//        });
-//    }
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.home_menu,menu);
 
-    private void getAllStateList() {
-        loadDialog.showDialog();
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-        refAllStates = FirebaseFirestore.getInstance()
-                .collection("Sarkari")
-                .document(Common.STATE_ID)
-                .collection("Services");
+        searchView.setQueryHint("Enter State Name");
 
-        refAllStates
-                .orderBy("name", Query.Direction.ASCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        List<State> stateList = new ArrayList<>();
-                        if (task.isSuccessful())    {
-                            for (QueryDocumentSnapshot stateSnapshot : task.getResult())  {
-                                State state = stateSnapshot.toObject(State.class);
-                                state.setId(stateSnapshot.getId());
-                                stateList.add(state);
-                            }
-                            iStateLoadListener.onAllPStateLoadSuccess(stateList);
-                            loadDialog.hideDialog();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ArrayList<State> stateList = new ArrayList<>();
+
+                for (State stateName : stateArrayList)   {
+                    if (stateName.getStateName().toLowerCase().contains(newText))  {
+                        Cursor cursor = new MyDatabase(getContext()).getStateByNames(newText);
+
+                        while (cursor.moveToNext()) {
+                            State state = new State(
+                                    cursor.getString(0),
+                                    cursor.getString(1),
+                                    cursor.getString(2)
+                            );
+                            stateList.add(state);
                         }
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                iStateLoadListener.onAllStateLoadFailed(e.getMessage());
+
+                }
+//                ArrayAdapter<State> adapter = new ArrayAdapter<State>(getContext(),
+//                        android.R.layout.simple_list_item_1,stateList);
+
+                StateAdapter adapter = new StateAdapter(getContext(),stateList);
+                recyclerView.setAdapter(adapter);
+
+                return true;
             }
         });
-    }
 
-    @Override
-    public void onAllPStateLoadSuccess(List<State> allStateList) {
-        recyclerState.setHasFixedSize(true);
-        recyclerState.setLayoutManager(new GridLayoutManager(getContext(),2));
-
-        recyclerState.setAdapter(new StateAdapter(getContext(),allStateList));
-    }
-
-    @Override
-    public void onAllStateLoadFailed(String message) {
-        Toast.makeText(getContext(), ""+message, Toast.LENGTH_SHORT).show();
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
