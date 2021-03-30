@@ -194,8 +194,8 @@ public class HomeFragment extends Fragment  {
                 ArrayList<State> stateList = new ArrayList<>();
 
                 for (State stateName : stateArrayList)   {
-                    if (stateName.getStateName().toLowerCase().contains(newText))  {
-                        Cursor cursor = new MyDatabase(getContext()).getStateByNames(newText);
+                    if (stateName.getStateName().toLowerCase().contains(newText.toLowerCase()))  {
+                        Cursor cursor = new MyDatabase(getContext()).getStateByNames(newText.toLowerCase());
 
                         while (cursor.moveToNext()) {
                             State state = new State(
@@ -208,8 +208,6 @@ public class HomeFragment extends Fragment  {
                     }
 
                 }
-//                ArrayAdapter<State> adapter = new ArrayAdapter<State>(getContext(),
-//                        android.R.layout.simple_list_item_1,stateList);
 
                 StateAdapter adapter = new StateAdapter(getContext(),stateList);
                 recyclerView.setAdapter(adapter);

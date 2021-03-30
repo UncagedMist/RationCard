@@ -4,9 +4,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -25,8 +30,11 @@ import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.android.play.core.tasks.Task;
 
+import java.util.Calendar;
+
 import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.Adapter.ScreenSliderPagerAdapter;
+import tbc.uncagedmist.rationcard.Receiver.Receiver;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -47,6 +55,9 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        registerNotification();
+
         setContentView(R.layout.activity_splash);
 
         noInternetDialog = new NoInternetDialog.Builder(SplashActivity.this).build();
@@ -100,12 +111,27 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
+    private void registerNotification() {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(SplashActivity.this, Receiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        calendar.set(Calendar.HOUR_OF_DAY, 7);
+        calendar.set(calendar.MINUTE, 30);
+        calendar.set(Calendar.SECOND, 0);
+
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                1000 * 60 * 300, pendingIntent);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE)    {
-
         }
 
         if (resultCode != RESULT_OK)    {
