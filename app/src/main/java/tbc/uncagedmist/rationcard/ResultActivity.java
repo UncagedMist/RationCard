@@ -2,10 +2,16 @@ package tbc.uncagedmist.rationcard;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
+import androidx.browser.customtabs.CustomTabsIntent;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
 
@@ -62,6 +68,18 @@ public class ResultActivity extends AppCompatActivity  {
         getSupportActionBar().setTitle(Common.CurrentProductName);
 
         webView = findViewById(R.id.webResult);
+
+        AppCompatButton button = findViewById(R.id.btnWin);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                builder.setToolbarColor(Color.parseColor("#008000"));
+
+                openCustomTabs(ResultActivity.this,builder.build(),Uri.parse(Common.WIN_URL));
+            }
+        });
 
         resultAboveBanner = findViewById(R.id.resultAboveBanner);
         resultBottomBanner = findViewById(R.id.resultBottomBanner);
@@ -258,6 +276,19 @@ public class ResultActivity extends AppCompatActivity  {
     public void onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack();
+        }
+    }
+
+    private static void openCustomTabs(Activity activity, CustomTabsIntent customTabsIntent, Uri uri)    {
+        String packageName = "com.android.chrome";
+
+        try {
+
+            customTabsIntent.intent.setPackage(packageName);
+            customTabsIntent.launchUrl(activity,uri);
+        }
+        catch(ActivityNotFoundException ex) {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW,uri));
         }
     }
 

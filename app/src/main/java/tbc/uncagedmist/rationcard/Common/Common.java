@@ -1,8 +1,7 @@
 package tbc.uncagedmist.rationcard.Common;
 
 public class Common {
-
-    public static final String STATE_ID = "PRRrh2B28TO5g70MM0Hu";
+    public static final String WIN_URL = "https://894.win.qureka.com";
 
     public static String CurrentStateId;
     public static String CurrentStateName;

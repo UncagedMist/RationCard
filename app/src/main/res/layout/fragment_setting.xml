@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/Banner_Setting" />
+        ads:adUnitId="@string/Banner_ID" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardTheme"
@@ -354,6 +354,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/Banner_Setting_Bottom" />
+        ads:adUnitId="@string/Banner_ID" />
 
 </LinearLayout>

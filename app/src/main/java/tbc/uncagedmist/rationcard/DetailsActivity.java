@@ -1,12 +1,18 @@
 package tbc.uncagedmist.rationcard;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -54,6 +60,17 @@ public class DetailsActivity extends AppCompatActivity {
         bottomDetailBanner = findViewById(R.id.detailBelowBanner);
 
         detailShare = findViewById(R.id.detailShare);
+        AppCompatButton button = findViewById(R.id.btnWin);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                builder.setToolbarColor(Color.parseColor("#008000"));
+
+                openCustomTabs(DetailsActivity.this,builder.build(),Uri.parse(Common.WIN_URL));
+            }
+        });
 
         Cursor cursor = new MyDatabase(this).getAllProductsByStateId(Common.CurrentStateId);
 
@@ -155,6 +172,19 @@ public class DetailsActivity extends AppCompatActivity {
                 // to the app after tapping on an ad.
             }
         });
+    }
+
+    private static void openCustomTabs(Activity activity, CustomTabsIntent customTabsIntent, Uri uri)    {
+        String packageName = "com.android.chrome";
+
+        try {
+
+            customTabsIntent.intent.setPackage(packageName);
+            customTabsIntent.launchUrl(activity,uri);
+        }
+        catch(ActivityNotFoundException ex) {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW,uri));
+        }
     }
 
     @Override

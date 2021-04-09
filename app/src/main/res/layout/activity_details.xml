@@ -24,10 +24,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/Banner_Detail" />
+        ads:adUnitId="@string/Banner_ID" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnWin"
+        android:layout_below="@id/detailAboveBanner"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="Play Win Coins Daily"
+        android:drawableLeft="@drawable/win"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/detailAboveBanner"
+        android:layout_below="@id/btnWin"
         android:layout_above="@id/detailBelowBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/Banner_Detail_Bottom" />
+        ads:adUnitId="@string/Banner_ID" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/detailShare"

@@ -46,7 +46,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
                 .inflate(R.layout.layout_details,parent,false);
 
         mInterstitialAd = new InterstitialAd(context);
-        mInterstitialAd.setAdUnitId("ca-app-pub-5860770870597755/8496470950");
+        mInterstitialAd.setAdUnitId("ca-app-pub-5860770870597755/3989063274");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         mInterstitialAd.setAdListener(new AdListener() {
@@ -63,6 +63,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
 
     @Override
     public void onBindViewHolder(@NonNull DetailAdapter.DetailViewHolder holder, final int position) {
+
         Picasso.get()
                 .load(products.get(position).getProductImage())
                 .into(holder.detailImage);

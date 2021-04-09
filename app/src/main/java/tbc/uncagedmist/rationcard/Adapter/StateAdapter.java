@@ -44,7 +44,7 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
                 .inflate(R.layout.layout_states,parent,false);
 
         mInterstitialAd = new InterstitialAd(context);
-        mInterstitialAd.setAdUnitId("ca-app-pub-5860770870597755/8496470950");
+        mInterstitialAd.setAdUnitId("ca-app-pub-5860770870597755/3989063274");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         mInterstitialAd.setAdListener(new AdListener() {

@@ -124,18 +124,18 @@ public class StateActivity extends AppCompatActivity implements  DrawerAdapter.O
     @Override
     public void onBackPressed() {
         new TTFancyGifDialog.Builder(StateActivity.this)
-                .setTitle("Sarkari Sahayata")
+                .setTitle("One Nation One Ration Card")
                 .setMessage("Support us by downloading our other apps!")
                 .setPositiveBtnText("Support")
                 .setPositiveBtnBackground("#22b573")
                 .setNegativeBtnText("Don't")
                 .setNegativeBtnBackground("#c1272d")
-                .setGifResource(R.drawable.ic_logo)
+                .setGifResource(R.mipmap.ic_logo)
                 .isCancellable(false)
                 .OnPositiveClicked(new TTFancyGifDialogListener() {
                     @Override
                     public void OnClick() {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.sarkarisahayata")));
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.rationpro")));
                     }
                 })
                 .OnNegativeClicked(new TTFancyGifDialogListener() {

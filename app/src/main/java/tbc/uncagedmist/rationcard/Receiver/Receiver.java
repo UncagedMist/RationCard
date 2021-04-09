@@ -31,8 +31,8 @@ public class Receiver extends BroadcastReceiver {
     }
 
     private void sendNotificationAPI26(Context context) {
-        String title = "राशन कार्ड";
-        String message = "राशन कार्ड में अपना नाम देखें और लाभ उठायें";
+        String title = "Pool prize is 50000 coins.";
+        String message = "Sharpen your cricket knowledge and win now.";
 
         NotificationHelper helper;
         Notification.Builder builder;
@@ -50,8 +50,8 @@ public class Receiver extends BroadcastReceiver {
     }
 
     private void sendNotification(Context context) {
-        String title = "राशन कार्ड";
-        String message = "राशन कार्ड में अपना नाम देखें और लाभ उठायें";
+        String title = "Pool prize is 50000 coins.";
+        String message = "Sharpen your cricket knowledge and win now.";
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 

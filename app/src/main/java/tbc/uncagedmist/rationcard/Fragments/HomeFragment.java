@@ -1,14 +1,20 @@
 package tbc.uncagedmist.rationcard.Fragments;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -31,6 +37,7 @@ import java.util.ArrayList;
 
 import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.Adapter.StateAdapter;
+import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.Database.MyDatabase;
 import tbc.uncagedmist.rationcard.Model.State;
 import tbc.uncagedmist.rationcard.R;
@@ -70,10 +77,22 @@ public class HomeFragment extends Fragment  {
         aboveStateBanner = myFragment.findViewById(R.id.aboveStateBanner);
         bottomStateBanner = myFragment.findViewById(R.id.bottomStateBanner);
 
+        AppCompatButton button = myFragment.findViewById(R.id.btnWin);
+
         AdRequest adRequest = new AdRequest.Builder().build();
 
         aboveStateBanner.loadAd(adRequest);
         bottomStateBanner.loadAd(adRequest);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                builder.setToolbarColor(Color.parseColor("#008000"));
+
+                openCustomTabs(getActivity(),builder.build(), Uri.parse(Common.WIN_URL));
+            }
+        });
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
 
@@ -172,6 +191,19 @@ public class HomeFragment extends Fragment  {
         });
 
         return myFragment;
+    }
+
+    private static void openCustomTabs(Activity activity, CustomTabsIntent customTabsIntent, Uri uri)    {
+        String packageName = "com.android.chrome";
+
+        try {
+
+            customTabsIntent.intent.setPackage(packageName);
+            customTabsIntent.launchUrl(activity,uri);
+        }
+        catch(ActivityNotFoundException ex) {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW,uri));
+        }
     }
 
     @Override
