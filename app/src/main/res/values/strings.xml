@@ -3,13 +3,12 @@
 
     <string name="title">One Ration Card</string>
 
-    <string name="APP_ID">ca-app-pub-5860770870597755~8410208029</string>
+    <string name="APP_ID">ca-app-pub-7920815986886474~2119672434</string>
 
-    <string name="Banner_ID">ca-app-pub-5860770870597755/5821019695</string>
+    <string name="Banner_ID">ca-app-pub-7920815986886474/8505722584</string>
+    <string name="Interstitial_ID">ca-app-pub-7920815986886474/3772787579</string>
+    <string name="Open_ID">ca-app-pub-7920815986886474/6027076512</string>
 
-    <string name="identity">Get All the Information about \n your Personal Identification Card \n Like : Aadhaar Card, Pan Card, \n Voter ID etc...</string>
-    <string name="services">It notifies you about \n all the Current and Upcoming \n Job, Government Services etc..</string>
-    <string name="updated">Always stay Updated without \n lacking any Benefits.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

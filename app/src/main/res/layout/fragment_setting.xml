@@ -2,22 +2,13 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#9D4DA4"
+    android:background="@color/setting"
     android:orientation="vertical"
     tools:context=".Fragments.SettingFragment">
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/settingAboveBanner"
-        android:layout_margin="2dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/Banner_ID" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardTheme"
@@ -345,15 +336,5 @@
         android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/settingBottomBanner"
-        android:layout_margin="2dp"
-        android:layout_gravity="center"
-        android:gravity="bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/Banner_ID" />
 
 </LinearLayout>

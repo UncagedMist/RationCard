@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="tbc.uncagedmist.rationcard">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,17 +19,23 @@
         android:roundIcon="@mipmap/ic_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        tools:replace="android:theme">
-        <activity android:name=".ResultActivity" />
-        <activity android:name=".DetailsActivity" />
-        <activity android:name=".StateActivity" />
+        android:usesCleartextTraffic="true">
+
+        <activity android:name=".ResultActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".DetailsActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".StateActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/APP_ID" />
 
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

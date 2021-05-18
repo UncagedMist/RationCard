@@ -13,8 +13,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -24,12 +27,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.Adapter.DetailAdapter;
 import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.Database.MyDatabase;
 import tbc.uncagedmist.rationcard.Model.Product;
-import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -40,14 +41,19 @@ public class DetailsActivity extends AppCompatActivity {
 
     FloatingActionButton detailShare;
 
-    NoInternetDialog noInternetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+
         setContentView(R.layout.activity_details);
 
-        noInternetDialog = new NoInternetDialog.Builder(DetailsActivity.this).build();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -128,11 +134,6 @@ public class DetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
             public void onAdClosed() {
                 // Code to be executed when the user is about to return
                 // to the app after tapping on an ad.
@@ -162,11 +163,6 @@ public class DetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
             public void onAdClosed() {
                 // Code to be executed when the user is about to return
                 // to the app after tapping on an ad.
@@ -185,11 +181,5 @@ public class DetailsActivity extends AppCompatActivity {
         catch(ActivityNotFoundException ex) {
             activity.startActivity(new Intent(Intent.ACTION_VIEW,uri));
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        noInternetDialog.onDestroy();
     }
 }

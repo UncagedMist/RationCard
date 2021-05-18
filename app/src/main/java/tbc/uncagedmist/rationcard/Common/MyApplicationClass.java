@@ -40,7 +40,6 @@ public class MyApplicationClass extends Application {
         super.onCreate();
 
         context = getApplicationContext();
-        MobileAds.initialize(this, getResources().getString(R.string.APP_ID));
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override

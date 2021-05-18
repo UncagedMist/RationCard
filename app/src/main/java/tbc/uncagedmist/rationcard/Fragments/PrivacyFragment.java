@@ -12,15 +12,10 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.R;
 import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
@@ -32,11 +27,7 @@ public class PrivacyFragment extends Fragment {
 
     WebView webView;
 
-    AdView privacyAboveBanner,privacyBottomBanner;
-
     FloatingActionButton privacyShare;
-
-    NoInternetDialog noInternetDialog;
 
     CustomLoadDialog loadDialog;
     CustomProgressDialog progressDialog;
@@ -52,18 +43,11 @@ public class PrivacyFragment extends Fragment {
 
         loadDialog.showDialog();
 
-        noInternetDialog = new NoInternetDialog.Builder(getContext()).build();
-
         webView = myFragment.findViewById(R.id.webPrivacy);
-        privacyAboveBanner = myFragment.findViewById(R.id.privacyAboveBanner);
-        privacyBottomBanner = myFragment.findViewById(R.id.privacyBottomBanner);
 
         privacyShare = myFragment.findViewById(R.id.privacyShare);
 
         AdRequest adRequest = new AdRequest.Builder().build();
-
-        privacyAboveBanner.loadAd(adRequest);
-        privacyBottomBanner.loadAd(adRequest);
 
         webView.setWebViewClient(new MyWebViewClient());
 
@@ -87,74 +71,6 @@ public class PrivacyFragment extends Fragment {
         webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
         webView.loadUrl(url);
-
-        privacyAboveBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
-
-        privacyBottomBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
 
         return myFragment;
     }
@@ -180,11 +96,5 @@ public class PrivacyFragment extends Fragment {
                 progressDialog.hideProgressDialog();
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        noInternetDialog.onDestroy();
     }
 }

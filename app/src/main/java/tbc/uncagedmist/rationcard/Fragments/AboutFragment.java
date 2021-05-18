@@ -9,14 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.shashank.sony.fancyaboutpagelib.FancyAboutPage;
 
-import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.R;
 
 public class AboutFragment extends Fragment  {
@@ -25,15 +19,12 @@ public class AboutFragment extends Fragment  {
 
     FancyAboutPage aboutPage;
     String version;
-    NoInternetDialog noInternetDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myFragment = inflater.inflate(R.layout.fragment_about, container, false);
-
-        noInternetDialog = new NoInternetDialog.Builder(getContext()).build();
 
         aboutPage = myFragment.findViewById(R.id.aboutPage);
         aboutPage.setCover(R.drawable.coverimg);
@@ -64,11 +55,5 @@ public class AboutFragment extends Fragment  {
         aboutPage.addGitHubLink("https://github.com/UncagedMist");
 
         return myFragment;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        noInternetDialog.onDestroy();
     }
 }

@@ -8,17 +8,38 @@
     tools:context="tbc.uncagedmist.rationcard.SplashActivity"
     android:background="@drawable/bgback">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie"
+    <ImageView
+        android:id="@+id/image"
         android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        app:lottie_autoPlay="true"
-        app:lottie_rawRes="@raw/government"/>
-
-    <com.cuberto.liquid_swipe.LiquidPager
-        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="150dp"
+        android:src="@mipmap/ic_logo"/>
+
+    <TextView
+        android:layout_below="@id/image"
+        android:textStyle="bold|italic"
+        android:textSize="25sp"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:text="Get All Ration Info \n At One Place."
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.ncorti.slidetoact.SlideToActView
+        android:id="@+id/btnContinue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:text="Slide to Continue"
+        app:text_size="23dp"
+        app:text_style="bold"
+        app:text_color="@color/colorWhite"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        android:elevation="10dp"
+        app:area_margin="10dp"
+        app:inner_color="#2196f3"
+        app:outer_color="@drawable/bg"/>
 
 </RelativeLayout>

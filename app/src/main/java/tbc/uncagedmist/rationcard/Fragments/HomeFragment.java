@@ -10,10 +10,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
@@ -27,15 +25,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-import am.appwise.components.ni.NoInternetDialog;
 import tbc.uncagedmist.rationcard.Adapter.StateAdapter;
 import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.Database.MyDatabase;
@@ -44,45 +37,32 @@ import tbc.uncagedmist.rationcard.R;
 
 public class HomeFragment extends Fragment  {
 
-    AdView aboveStateBanner, bottomStateBanner;
-
     RecyclerView recyclerView;
     ArrayList<State> stateArrayList = new ArrayList<>();
 
     FloatingActionButton stateShare;
 
-    NoInternetDialog noInternetDialog;
+    private static HomeFragment INSTANCE = null;
 
-    View myFragment;
+    public static HomeFragment getInstance()    {
+
+        if (INSTANCE == null)   {
+            INSTANCE = new HomeFragment();
+        }
+        return INSTANCE;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        myFragment = inflater.inflate(R.layout.fragment_home, container, false);
+        View myFragment = inflater.inflate(R.layout.fragment_home, container, false);
         setHasOptionsMenu(true);
-
-        noInternetDialog = new NoInternetDialog.Builder(getContext()).build();
-
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
-
-        Toolbar toolbar = myFragment.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("One Nation One Ration");
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView = myFragment.findViewById(R.id.recyclerState);
 
         stateShare = myFragment.findViewById(R.id.stateShare);
 
-        aboveStateBanner = myFragment.findViewById(R.id.aboveStateBanner);
-        bottomStateBanner = myFragment.findViewById(R.id.bottomStateBanner);
-
         AppCompatButton button = myFragment.findViewById(R.id.btnWin);
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        aboveStateBanner.loadAd(adRequest);
-        bottomStateBanner.loadAd(adRequest);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,75 +98,6 @@ public class HomeFragment extends Fragment  {
                 String message = "Never Miss A Thing About Ration Card. Install One Ration Card App and Stay Updated! \n https://play.google.com/store/apps/details?id=tbc.uncagedmist.rationcard";
                 intent.putExtra(Intent.EXTRA_TEXT, message);
                 startActivity(Intent.createChooser(intent, "Share One Ration Card App Using"));
-            }
-        });
-
-
-        aboveStateBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
-
-        bottomStateBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
             }
         });
 
@@ -249,11 +160,5 @@ public class HomeFragment extends Fragment  {
         });
 
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        noInternetDialog.onDestroy();
     }
 }
