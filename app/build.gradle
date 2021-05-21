@@ -8,8 +8,8 @@ android {
         applicationId "tbc.uncagedmist.rationcard"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 28
-        versionName "1.2.8"
+        versionCode 29
+        versionName "1.2.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true

@@ -36,7 +36,6 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window window = getWindow();
             window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
@@ -78,7 +77,8 @@ public class SplashActivity extends AppCompatActivity {
 
                     try {
                         appUpdateManager.startUpdateFlowForResult(result,AppUpdateType.IMMEDIATE,SplashActivity.this,REQUEST_CODE);
-                    } catch (IntentSender.SendIntentException e) {
+                    }
+                    catch (IntentSender.SendIntentException e) {
                         e.printStackTrace();
                     }
                 }

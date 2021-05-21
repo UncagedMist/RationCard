@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/setting"
     android:orientation="vertical"
-    tools:context=".Fragments.SettingFragment">
+    tools:context=".SettingActivity">
 
 
     <androidx.cardview.widget.CardView

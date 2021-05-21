@@ -41,7 +41,6 @@ import com.shashank.sony.fancydialoglib.Icon;
 import tbc.uncagedmist.rationcard.Fragments.AboutFragment;
 import tbc.uncagedmist.rationcard.Fragments.HomeFragment;
 import tbc.uncagedmist.rationcard.Fragments.PrivacyFragment;
-import tbc.uncagedmist.rationcard.Fragments.SettingFragment;
 
 public class StateActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -230,10 +229,7 @@ public class StateActivity extends AppCompatActivity
             toolbar.setTitle("Privacy & Policy");
         }
         else if (id == R.id.nav_setting)   {
-            toolbar.setBackgroundColor(getColor(R.color.setting));
-            SettingFragment settingFragment = new SettingFragment();
-            transaction.replace(R.id.main_frame,settingFragment);
-            toolbar.setTitle("Settings");
+            startActivity(new Intent(StateActivity.this,SettingActivity.class));
         }
         else if (id == R.id.nav_feed) {
             feedback();

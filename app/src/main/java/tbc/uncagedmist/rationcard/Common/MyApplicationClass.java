@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.adcolony.sdk.AdColony;
+import com.adcolony.sdk.AdColonyAppOptions;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.AdapterStatus;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -16,11 +18,8 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 
 import java.util.Map;
 
-import tbc.uncagedmist.rationcard.R;
 import tbc.uncagedmist.rationcard.Utility.AppOpenManager;
 import tbc.uncagedmist.rationcard.Utility.MyNetworkReceiver;
-
-import static android.content.ContentValues.TAG;
 
 public class MyApplicationClass extends Application {
 
@@ -35,11 +34,18 @@ public class MyApplicationClass extends Application {
         return context;
     }
 
+    public static final String APP_ID = "app49adc6410aaa45de93";
+    public static final String ZONE_ID = "vzf1c2258245f24bb686";
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         context = getApplicationContext();
+
+        AdColonyAppOptions appOptions = new AdColonyAppOptions();
+
+        AdColony.configure(this, appOptions, APP_ID, ZONE_ID);
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
