@@ -26,8 +26,6 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".SettingActivity"
-            android:screenOrientation="portrait"/>
         <activity
             android:name=".ResultActivity"
             android:screenOrientation="portrait" />
@@ -40,7 +38,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/APP_ID" />
+            android:value="@string/SAMPLE_APP_ID" />
 
         <activity
             android:name=".SplashActivity"

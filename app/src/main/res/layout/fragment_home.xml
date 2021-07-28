@@ -7,22 +7,10 @@
     tools:context=".Fragments.HomeFragment"
     android:background="@color/blue">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnWin"
-        android:padding="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:text="Play Win Coins Daily"
-        android:drawableLeft="@drawable/win"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp" />
-
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/btnWin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recyclerState"/>
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/stateShare"

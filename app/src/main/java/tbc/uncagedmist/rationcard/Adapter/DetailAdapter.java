@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
 
         InterstitialAd.load(
                 context,
-                context.getString(R.string.Interstitial_ID),
+                context.getString(R.string.SAMPLE_Interstitial_ID),
                 adRequest, new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
@@ -90,11 +92,22 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
     @Override
     public void onBindViewHolder(@NonNull DetailAdapter.DetailViewHolder holder, final int position) {
 
+        holder.progressBar.setVisibility(View.VISIBLE);
+
         Picasso.get()
                 .load(products.get(position).getProductImage())
-                .into(holder.detailImage);
+                .into(holder.detailImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.progressBar.setVisibility(View.GONE);
+                        holder.detailName.setText(products.get(position).getProductName());
+                    }
 
-        holder.detailName.setText(products.get(position).getProductName());
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
 
         holder.cardDetails.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +137,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
         ImageView detailImage;
         TextView detailName;
         CardView cardDetails;
+        ProgressBar progressBar;
 
         IRecyclerItemSelectListener iRecyclerItemSelectListener;
 
@@ -137,6 +151,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
             detailImage = itemView.findViewById(R.id.avatar_image);
             detailName = itemView.findViewById(R.id.txtTitle);
             cardDetails = itemView.findViewById(R.id.card_details);
+            progressBar = itemView.findViewById(R.id.progress_bar);
 
             itemView.setOnClickListener(this);
         }

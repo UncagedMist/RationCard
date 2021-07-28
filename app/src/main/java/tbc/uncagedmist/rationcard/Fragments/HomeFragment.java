@@ -4,18 +4,16 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SearchView;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -25,12 +23,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.ads.nativetemplates.rvadapter.AdmobNativeAdAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 import tbc.uncagedmist.rationcard.Adapter.StateAdapter;
-import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.Database.MyDatabase;
 import tbc.uncagedmist.rationcard.Model.State;
 import tbc.uncagedmist.rationcard.R;
@@ -62,19 +60,7 @@ public class HomeFragment extends Fragment  {
 
         stateShare = myFragment.findViewById(R.id.stateShare);
 
-        AppCompatButton button = myFragment.findViewById(R.id.btnWin);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                builder.setToolbarColor(Color.parseColor("#008000"));
-
-                openCustomTabs(getActivity(),builder.build(), Uri.parse(Common.WIN_URL));
-            }
-        });
-
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         Cursor cursor = new MyDatabase(getContext()).getAllStateData();
 
@@ -87,8 +73,18 @@ public class HomeFragment extends Fragment  {
             stateArrayList.add(state);
         }
 
+
         StateAdapter adapter = new StateAdapter(getContext(),stateArrayList);
-        recyclerView.setAdapter(adapter);
+
+        AdmobNativeAdAdapter admobNativeAdAdapter =
+                AdmobNativeAdAdapter.Builder.with(
+                        getString(R.string.SAMPLE_NATIVE),
+                        adapter,
+                        "small")
+                        .adItemInterval(3)
+                        .build();
+
+        recyclerView.setAdapter(admobNativeAdAdapter);
 
         stateShare.setOnClickListener(new View.OnClickListener() {
             @Override

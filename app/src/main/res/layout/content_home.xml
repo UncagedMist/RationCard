@@ -2,7 +2,6 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,29 +10,18 @@
     tools:context=".StateActivity"
     tools:showIn="@layout/app_bar_home">
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/aboveBanner"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/Banner_ID" />
 
     <FrameLayout
         android:id="@+id/main_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/aboveBanner"
         android:layout_above="@id/bottomBanner"
         android:layout_weight="1"/>
 
-    <com.google.android.gms.ads.AdView
+    <FrameLayout
         android:id="@+id/bottomBanner"
-        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/Banner_ID" />
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -20,6 +22,7 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -52,7 +55,7 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
 
         InterstitialAd.load(
                 context,
-                context.getString(R.string.Interstitial_ID),
+                context.getString(R.string.SAMPLE_Interstitial_ID),
                 adRequest, new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
@@ -88,11 +91,23 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
 
     @Override
     public void onBindViewHolder(@NonNull StateAdapter.StateViewHolder holder, final int position) {
+
+        holder.progressBar.setVisibility(View.VISIBLE);
+
         Picasso.get()
                 .load(states.get(position).getStateImage())
-                .into(holder.stateImage);
+                .into(holder.stateImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.progressBar.setVisibility(View.GONE);
+                        holder.stateName.setText(states.get(position).getStateName());
+                    }
 
-        holder.stateName.setText(states.get(position).getStateName());
+                    @Override
+                    public void onError(Exception e) {
+                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         holder.cardStates.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +135,7 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
         ImageView stateImage;
         TextView stateName;
         CardView cardStates;
+        ProgressBar progressBar;
 
         IRecyclerItemSelectListener iRecyclerItemSelectListener;
 
@@ -133,6 +149,7 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
             stateImage = itemView.findViewById(R.id.state_image);
             stateName = itemView.findViewById(R.id.state_name);
             cardStates = itemView.findViewById(R.id.card_states);
+            progressBar = itemView.findViewById(R.id.progress_bar);
 
             itemView.setOnClickListener(this);
         }

@@ -19,16 +19,17 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
-
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
@@ -41,6 +42,7 @@ import com.shashank.sony.fancydialoglib.Icon;
 import tbc.uncagedmist.rationcard.Fragments.AboutFragment;
 import tbc.uncagedmist.rationcard.Fragments.HomeFragment;
 import tbc.uncagedmist.rationcard.Fragments.PrivacyFragment;
+import tbc.uncagedmist.rationcard.Fragments.SettingFragment;
 
 public class StateActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -50,7 +52,8 @@ public class StateActivity extends AppCompatActivity
 
     private static final int PERMISSION_REQUEST_CODE = 31;
 
-    AdView aboveBanner, bottomBanner;
+    AdView adView;
+    FrameLayout bottomBanner;
 
     Toolbar toolbar;
 
@@ -100,13 +103,13 @@ public class StateActivity extends AppCompatActivity
             }, PERMISSION_REQUEST_CODE);
         }
 
-        aboveBanner = findViewById(R.id.aboveBanner);
         bottomBanner = findViewById(R.id.bottomBanner);
 
-        AdRequest adRequest = new AdRequest.Builder().build();
+        adView = new AdView(this);
+        adView.setAdUnitId(getString(R.string.SAMPLE_Banner_ID));
+        bottomBanner.addView(adView);
 
-        aboveBanner.loadAd(adRequest);
-        bottomBanner.loadAd(adRequest);
+        loadBanner();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -118,89 +121,55 @@ public class StateActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         loadFragment(HomeFragment.getInstance());
+    }
 
-        adMethod();
+    private void loadBanner() {
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        AdSize adSize = getAdSize();
+        // Step 4 - Set the adaptive ad size on the ad view.
+        adView.setAdSize(adSize);
+
+        // Step 5 - Start loading the ad in the background.
+        adView.loadAd(adRequest);
+    }
+
+    private AdSize getAdSize() {
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+
+        float widthPixels = outMetrics.widthPixels;
+        float density = outMetrics.density;
+
+        int adWidth = (int) (widthPixels / density);
+
+        // Step 3 - Get adaptive ad size and return for setting on the ad view.
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+                this,
+                adWidth
+        );
     }
 
     @Override
     public void onBackPressed() {
 
         new FancyAlertDialog.Builder(StateActivity.this)
-                .setTitle("One Nation One Ration Card")
+                .setTitle("Games Wallpaper App")
                 .setBackgroundColor(Color.parseColor("#303F9F"))  //Don't pass R.color.colorvalue
-                .setMessage("Support us by downloading our other apps!")
+                .setMessage("Customize your Phone's Look with our new Wallpaper App.Support us by downloading our other apps!")
                 .setNegativeBtnText("Don't")
                 .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
                 .setPositiveBtnText("Support")
                 .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
                 .setAnimation(Animation.POP)
-                .isCancellable(true)
+                .isCancellable(false)
                 .setIcon(R.drawable.ic_star_border_black_24dp, Icon.Visible)
                 .OnPositiveClicked(() ->
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.rationpro"))))
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.mobilewallpapers"))))
                 .OnNegativeClicked(() -> {
                 })
                 .build();
-    }
-
-    private void adMethod() {
-        aboveBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
-
-        bottomBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -228,8 +197,11 @@ public class StateActivity extends AppCompatActivity
             transaction.replace(R.id.main_frame,privacyFragment);
             toolbar.setTitle("Privacy & Policy");
         }
-        else if (id == R.id.nav_setting)   {
-            startActivity(new Intent(StateActivity.this,SettingActivity.class));
+        else if (id == R.id.nav_setting) {
+            toolbar.setBackgroundColor(getColor(R.color.green));
+            SettingFragment settingFragment = new SettingFragment();
+            transaction.replace(R.id.main_frame,settingFragment);
+            toolbar.setTitle("Miscellaneous");
         }
         else if (id == R.id.nav_feed) {
             feedback();

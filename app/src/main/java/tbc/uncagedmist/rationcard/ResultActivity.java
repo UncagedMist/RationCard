@@ -2,7 +2,6 @@ package tbc.uncagedmist.rationcard;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.browser.customtabs.CustomTabsIntent;
 
@@ -16,20 +15,21 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.SslErrorHandler;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.monstertechno.adblocker.AdBlockerWebView;
 import com.monstertechno.adblocker.util.AdBlocker;
@@ -44,7 +44,8 @@ import tbc.uncagedmist.rationcard.Utility.CustomProgressDialog;
 
 public class ResultActivity extends AppCompatActivity  {
 
-    AdView resultAboveBanner, resultBottomBanner;
+    FrameLayout resultBottomBanner;
+    AdView adView;
     WebView webView;
 
     FloatingActionButton resultShare,resultBack;
@@ -76,30 +77,18 @@ public class ResultActivity extends AppCompatActivity  {
 
         webView = findViewById(R.id.webResult);
 
-        AppCompatButton button = findViewById(R.id.btnWin);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                builder.setToolbarColor(Color.parseColor("#008000"));
-
-                openCustomTabs(ResultActivity.this,builder.build(),Uri.parse(Common.WIN_URL));
-            }
-        });
-
-        resultAboveBanner = findViewById(R.id.resultAboveBanner);
         resultBottomBanner = findViewById(R.id.resultBottomBanner);
 
         resultShare = findViewById(R.id.resultShare);
         resultBack = findViewById(R.id.resultBack);
 
+        adView = new AdView(this);
+        adView.setAdUnitId(getString(R.string.SAMPLE_Banner_ID));
+        resultBottomBanner.addView(adView);
+
+        loadBanner();
+
         new AdBlockerWebView.init(this).initializeWebView(webView);
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        resultAboveBanner.loadAd(adRequest);
-        resultBottomBanner.loadAd(adRequest);
 
         webView.setWebViewClient(new MyWebViewClient());
 
@@ -132,65 +121,34 @@ public class ResultActivity extends AppCompatActivity  {
         webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
         webView.loadUrl(url);
+    }
 
-        resultAboveBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
+    private void loadBanner() {
+        AdRequest adRequest = new AdRequest.Builder().build();
 
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
+        AdSize adSize = getAdSize();
+        // Step 4 - Set the adaptive ad size on the ad view.
+        adView.setAdSize(adSize);
 
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
+        // Step 5 - Start loading the ad in the background.
+        adView.loadAd(adRequest);
+    }
 
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
+    private AdSize getAdSize() {
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
 
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
+        float widthPixels = outMetrics.widthPixels;
+        float density = outMetrics.density;
 
-        resultBottomBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
+        int adWidth = (int) (widthPixels / density);
 
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
+        // Step 3 - Get adaptive ad size and return for setting on the ad view.
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+                this,
+                adWidth
+        );
     }
 
     private class MyWebViewClient extends WebViewClient {

@@ -25,7 +25,6 @@ import static androidx.lifecycle.Lifecycle.Event.ON_START;
 public class AppOpenManager implements LifecycleObserver, Application.ActivityLifecycleCallbacks {
 
     private static final String LOG_TAG = "AppOpenManager";
-    private static final String AD_UNIT_ID = String.valueOf(R.string.Open_ID);
 
     private AppOpenAd appOpenAd = null;
 
@@ -68,8 +67,12 @@ public class AppOpenManager implements LifecycleObserver, Application.ActivityLi
                 };
         AdRequest request = getAdRequest();
         AppOpenAd.load(
-                myApplication, AD_UNIT_ID, request,
-                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
+                myApplication,
+                currentActivity.getString(R.string.SAMPLE_Open_ID),
+                request,
+                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
+                loadCallback
+        );
     }
 
     /** Creates and returns ad request. */
