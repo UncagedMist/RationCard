@@ -1,5 +1,6 @@
 package tbc.uncagedmist.rationcard.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -55,7 +56,7 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
 
         InterstitialAd.load(
                 context,
-                context.getString(R.string.SAMPLE_Interstitial_ID),
+                context.getString(R.string.Interstitial_ID),
                 adRequest, new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
@@ -90,7 +91,7 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StateAdapter.StateViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull StateAdapter.StateViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
         holder.progressBar.setVisibility(View.VISIBLE);
 

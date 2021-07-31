@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment  {
 
         AdmobNativeAdAdapter admobNativeAdAdapter =
                 AdmobNativeAdAdapter.Builder.with(
-                        getString(R.string.SAMPLE_NATIVE),
+                        getString(R.string.Native_ID),
                         adapter,
                         "small")
                         .adItemInterval(3)

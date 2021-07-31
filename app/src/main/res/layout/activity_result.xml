@@ -15,6 +15,15 @@
         app:titleTextColor="@color/colorWhite"
         android:background="@color/purple"/>
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:max="3"
+        android:progress="100"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
     <WebView
         android:id="@+id/webResult"
         android:layout_below="@id/toolbar"

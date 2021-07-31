@@ -38,7 +38,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/SAMPLE_APP_ID" />
+            android:value="@string/APP_ID" />
 
         <activity
             android:name=".SplashActivity"

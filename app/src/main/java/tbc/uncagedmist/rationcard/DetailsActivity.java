@@ -68,7 +68,7 @@ public class DetailsActivity extends AppCompatActivity {
         detailShare = findViewById(R.id.detailShare);
 
         adView = new AdView(this);
-        adView.setAdUnitId(getString(R.string.SAMPLE_Banner_ID));
+        adView.setAdUnitId(getString(R.string.Banner_ID));
         bottomDetailBanner.addView(adView);
 
         loadBanner();
@@ -90,7 +90,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         AdmobNativeAdAdapter admobNativeAdAdapter =
                 AdmobNativeAdAdapter.Builder.with(
-                        getString(R.string.SAMPLE_NATIVE),
+                        getString(R.string.Native_ID),
                         adapter,
                         "small")
                         .adItemInterval(1)

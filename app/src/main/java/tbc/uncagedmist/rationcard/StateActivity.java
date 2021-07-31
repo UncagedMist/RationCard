@@ -106,7 +106,7 @@ public class StateActivity extends AppCompatActivity
         bottomBanner = findViewById(R.id.bottomBanner);
 
         adView = new AdView(this);
-        adView.setAdUnitId(getString(R.string.SAMPLE_Banner_ID));
+        adView.setAdUnitId(getString(R.string.Banner_ID));
         bottomBanner.addView(adView);
 
         loadBanner();

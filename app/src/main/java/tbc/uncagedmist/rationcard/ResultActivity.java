@@ -26,6 +26,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -39,8 +40,6 @@ import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
 import com.shashank.sony.fancydialoglib.Icon;
 
 import tbc.uncagedmist.rationcard.Common.Common;
-import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
-import tbc.uncagedmist.rationcard.Utility.CustomProgressDialog;
 
 public class ResultActivity extends AppCompatActivity  {
 
@@ -49,9 +48,7 @@ public class ResultActivity extends AppCompatActivity  {
     WebView webView;
 
     FloatingActionButton resultShare,resultBack;
-
-    CustomLoadDialog loadDialog;
-    CustomProgressDialog progressDialog;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,25 +62,21 @@ public class ResultActivity extends AppCompatActivity  {
 
         setContentView(R.layout.activity_result);
 
-        loadDialog = new CustomLoadDialog(this);
-        progressDialog = new CustomProgressDialog(this);
-
-        loadDialog.showDialog();
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle(Common.CurrentProductName);
-
         webView = findViewById(R.id.webResult);
+        progressBar = findViewById(R.id.progress_bar);
 
         resultBottomBanner = findViewById(R.id.resultBottomBanner);
 
         resultShare = findViewById(R.id.resultShare);
         resultBack = findViewById(R.id.resultBack);
 
+        getSupportActionBar().setTitle(Common.CurrentProductName);
+
         adView = new AdView(this);
-        adView.setAdUnitId(getString(R.string.SAMPLE_Banner_ID));
+        adView.setAdUnitId(getString(R.string.Banner_ID));
         resultBottomBanner.addView(adView);
 
         loadBanner();
@@ -218,16 +211,12 @@ public class ResultActivity extends AppCompatActivity  {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            loadDialog.hideDialog();
-            progressDialog.showProgressDialog();
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            if(progressDialog!=null){
-                progressDialog.hideProgressDialog();
-            }
+            progressBar.setVisibility(View.GONE);
         }
     }
 

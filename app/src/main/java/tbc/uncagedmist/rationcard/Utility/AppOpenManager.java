@@ -68,7 +68,7 @@ public class AppOpenManager implements LifecycleObserver, Application.ActivityLi
         AdRequest request = getAdRequest();
         AppOpenAd.load(
                 myApplication,
-                currentActivity.getString(R.string.SAMPLE_Open_ID),
+                currentActivity.getString(R.string.Open_ID),
                 request,
                 AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
                 loadCallback

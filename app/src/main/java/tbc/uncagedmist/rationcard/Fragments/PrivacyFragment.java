@@ -12,14 +12,12 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.R;
-import tbc.uncagedmist.rationcard.Utility.CustomLoadDialog;
-import tbc.uncagedmist.rationcard.Utility.CustomProgressDialog;
 
 public class PrivacyFragment extends Fragment {
 
@@ -29,8 +27,7 @@ public class PrivacyFragment extends Fragment {
 
     FloatingActionButton privacyShare;
 
-    CustomLoadDialog loadDialog;
-    CustomProgressDialog progressDialog;
+    ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,16 +35,10 @@ public class PrivacyFragment extends Fragment {
 
         myFragment =  inflater.inflate(R.layout.fragment_privacy, container, false);
 
-        loadDialog = new CustomLoadDialog(getContext());
-        progressDialog = new CustomProgressDialog(getContext());
-
-        loadDialog.showDialog();
-
         webView = myFragment.findViewById(R.id.webPrivacy);
 
         privacyShare = myFragment.findViewById(R.id.privacyShare);
-
-        AdRequest adRequest = new AdRequest.Builder().build();
+        progressBar = myFragment.findViewById(R.id.progress_bar);
 
         webView.setWebViewClient(new MyWebViewClient());
 
@@ -85,16 +76,12 @@ public class PrivacyFragment extends Fragment {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            loadDialog.hideDialog();
-            progressDialog.showProgressDialog();
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            if(progressDialog!=null){
-                progressDialog.hideProgressDialog();
-            }
+            progressBar.setVisibility(View.GONE);
         }
     }
 }
