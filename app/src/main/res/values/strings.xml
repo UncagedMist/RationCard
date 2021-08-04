@@ -3,21 +3,13 @@
 
     <string name="title">One Ration Card</string>
 
-    <string name="APP_ID">ca-app-pub-7920815986886474~2119672434</string>
-
-    <string name="Banner_ID">ca-app-pub-7920815986886474/8505722584</string>
-    <string name="Open_ID">ca-app-pub-7920815986886474/6027076512</string>
-    <string name="Interstitial_ID">ca-app-pub-7920815986886474/3772787579</string>
-    <string name="Native_ID">ca-app-pub-7920815986886474/4855224632</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-<!--    <string name="SAMPLE_APP_ID">ca-app-pub-3940256099942544~3347511713</string>-->
+    <string name="FB_APP_ID">239396277600543</string>
 
-<!--    <string name="SAMPLE_Banner_ID">ca-app-pub-3940256099942544/6300978111</string>-->
-<!--    <string name="SAMPLE_Interstitial_ID">ca-app-pub-3940256099942544/1033173712</string>-->
-<!--    <string name="SAMPLE_Open_ID">ca-app-pub-3940256099942544/3419835294</string>-->
-<!--    <string name="SAMPLE_NATIVE">ca-app-pub-3940256099942544/2247696110</string>-->
+    <string name="FB_BANNER">239396277600543_239399624266875</string>
+    <string name="FB_FULL">239396277600543_239396887600482</string>
+    <string name="FB_NATIVE">239396277600543_260113035528867</string>
 
 </resources>

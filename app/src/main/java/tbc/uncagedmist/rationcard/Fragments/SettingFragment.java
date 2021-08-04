@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -35,16 +34,16 @@ public class SettingFragment extends Fragment {
 //        });
     }
 
-    private static void openCustomTabs(Activity activity, CustomTabsIntent customTabsIntent, Uri uri)    {
-        String packageName = "com.android.chrome";
-
-        try {
-
-            customTabsIntent.intent.setPackage(packageName);
-            customTabsIntent.launchUrl(activity,uri);
-        }
-        catch(ActivityNotFoundException ex) {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW,uri));
-        }
-    }
+//    private static void openCustomTabs(Activity activity, CustomTabsIntent customTabsIntent, Uri uri)    {
+//        String packageName = "com.android.chrome";
+//
+//        try {
+//
+//            customTabsIntent.intent.setPackage(packageName);
+//            customTabsIntent.launchUrl(activity,uri);
+//        }
+//        catch(ActivityNotFoundException ex) {
+//            activity.startActivity(new Intent(Intent.ACTION_VIEW,uri));
+//        }
+//    }
 }

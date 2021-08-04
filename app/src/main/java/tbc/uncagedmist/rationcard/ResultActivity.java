@@ -3,20 +3,13 @@ package tbc.uncagedmist.rationcard;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.browser.customtabs.CustomTabsIntent;
-
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,12 +18,14 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.monstertechno.adblocker.AdBlockerWebView;
 import com.monstertechno.adblocker.util.AdBlocker;
@@ -43,7 +38,6 @@ import tbc.uncagedmist.rationcard.Common.Common;
 
 public class ResultActivity extends AppCompatActivity  {
 
-    FrameLayout resultBottomBanner;
     AdView adView;
     WebView webView;
 
@@ -62,24 +56,18 @@ public class ResultActivity extends AppCompatActivity  {
 
         setContentView(R.layout.activity_result);
 
+        loadBanner();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         webView = findViewById(R.id.webResult);
         progressBar = findViewById(R.id.progress_bar);
 
-        resultBottomBanner = findViewById(R.id.resultBottomBanner);
-
         resultShare = findViewById(R.id.resultShare);
         resultBack = findViewById(R.id.resultBack);
 
         getSupportActionBar().setTitle(Common.CurrentProductName);
-
-        adView = new AdView(this);
-        adView.setAdUnitId(getString(R.string.Banner_ID));
-        resultBottomBanner.addView(adView);
-
-        loadBanner();
 
         new AdBlockerWebView.init(this).initializeWebView(webView);
 
@@ -117,31 +105,42 @@ public class ResultActivity extends AppCompatActivity  {
     }
 
     private void loadBanner() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        AdSize adSize = getAdSize();
-        // Step 4 - Set the adaptive ad size on the ad view.
-        adView.setAdSize(adSize);
-
-        // Step 5 - Start loading the ad in the background.
-        adView.loadAd(adRequest);
-    }
-
-    private AdSize getAdSize() {
-        Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        display.getMetrics(outMetrics);
-
-        float widthPixels = outMetrics.widthPixels;
-        float density = outMetrics.density;
-
-        int adWidth = (int) (widthPixels / density);
-
-        // Step 3 - Get adaptive ad size and return for setting on the ad view.
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        adView = new AdView(
                 this,
-                adWidth
+                getString(R.string.FB_BANNER),
+                AdSize.BANNER_HEIGHT_50
         );
+
+        // Find the Ad Container
+        LinearLayout adContainer =  findViewById(R.id.banner_container);
+
+        // Add the ad view to your activity layout
+        adContainer.addView(adView);
+
+        AdListener adListener = new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                // Ad error callback
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        };
+
+        // Request an ad
+        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build());
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -227,16 +226,11 @@ public class ResultActivity extends AppCompatActivity  {
         }
     }
 
-    private static void openCustomTabs(Activity activity, CustomTabsIntent customTabsIntent, Uri uri)    {
-        String packageName = "com.android.chrome";
-
-        try {
-
-            customTabsIntent.intent.setPackage(packageName);
-            customTabsIntent.launchUrl(activity,uri);
+    @Override
+    protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
         }
-        catch(ActivityNotFoundException ex) {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW,uri));
-        }
+        super.onDestroy();
     }
 }

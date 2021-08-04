@@ -16,13 +16,10 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.FullScreenContentCallback;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.InterstitialAd;
+import com.facebook.ads.InterstitialAdListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -39,11 +36,12 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
     Context context;
     ArrayList<Product> products;
 
-    private InterstitialAd mInterstitialAd;
+    private InterstitialAd interstitialAd;
 
     public DetailAdapter(Context context, ArrayList<Product> products) {
         this.context = context;
         this.products = products;
+        loadFullscreen();
     }
 
     @NonNull
@@ -51,41 +49,6 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
     public DetailAdapter.DetailViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.layout_details,parent,false);
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        InterstitialAd.load(
-                context,
-                context.getString(R.string.Interstitial_ID),
-                adRequest, new InterstitialAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                        mInterstitialAd = interstitialAd;
-
-                        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
-                            @Override
-                            public void onAdDismissedFullScreenContent() {
-                                Log.d("TAG", "The ad was dismissed.");
-                            }
-
-                            @Override
-                            public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                Log.d("TAG", "The ad failed to show.");
-                            }
-
-                            @Override
-                            public void onAdShowedFullScreenContent() {
-                                mInterstitialAd = null;
-                                Log.d("TAG", "The ad was shown.");
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        mInterstitialAd = null;
-                    }
-                });
 
         return new DetailViewHolder(view);
     }
@@ -113,8 +76,8 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
         holder.cardDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mInterstitialAd != null) {
-                    mInterstitialAd.show((Activity) context);
+                if (interstitialAd.isAdLoaded()) {
+                    interstitialAd.show();
                 }
                 else {
                     Intent intent = new Intent(context, ResultActivity.class);
@@ -122,6 +85,10 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
                     Common.CurrentProductName = products.get(position).getProductName();
                     context.startActivity(intent);
                     ((Activity)context).finish();
+
+                    if (interstitialAd != null) {
+                        interstitialAd.destroy();
+                    }
                 }
             }
         });
@@ -131,6 +98,59 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
     @Override
     public int getItemCount() {
         return products.size();
+    }
+
+    private void loadFullscreen() {
+        interstitialAd = new InterstitialAd(
+                context.getApplicationContext(),
+                context.getString(R.string.FB_FULL)
+        );
+        // Create listeners for the Interstitial Ad
+        InterstitialAdListener interstitialAdListener = new InterstitialAdListener() {
+            @Override
+            public void onInterstitialDisplayed(Ad ad) {
+                // Interstitial ad displayed callback
+                Log.e("TAG", "Interstitial ad displayed.");
+            }
+
+            @Override
+            public void onInterstitialDismissed(Ad ad) {
+                // Interstitial dismissed callback
+                Log.e("TAG", "Interstitial ad dismissed.");
+            }
+
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                // Ad error callback
+                Log.e("TAG", "Interstitial ad failed to load: " + adError.getErrorMessage());
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Interstitial ad is loaded and ready to be displayed
+                Log.d("TAG", "Interstitial ad is loaded and ready to be displayed!");
+                // Show the ad
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+                Log.d("TAG", "Interstitial ad clicked!");
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+                Log.d("TAG", "Interstitial ad impression logged!");
+            }
+        };
+
+        // For auto play video ads, it's recommended to load the ad
+        // at least 30 seconds before it is shown
+        interstitialAd.loadAd(
+                interstitialAd.buildLoadAdConfig()
+                        .withAdListener(interstitialAdListener)
+                        .build());
     }
 
     public static class DetailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

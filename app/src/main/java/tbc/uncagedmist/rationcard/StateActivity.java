@@ -24,12 +24,14 @@ import android.view.Display;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
@@ -53,7 +55,6 @@ public class StateActivity extends AppCompatActivity
     private static final int PERMISSION_REQUEST_CODE = 31;
 
     AdView adView;
-    FrameLayout bottomBanner;
 
     Toolbar toolbar;
 
@@ -90,6 +91,8 @@ public class StateActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_state);
 
+        loadBanner();
+
         manager = ReviewManagerFactory.create(StateActivity.this);
 
         toolbar = findViewById(R.id.toolbar);
@@ -103,13 +106,8 @@ public class StateActivity extends AppCompatActivity
             }, PERMISSION_REQUEST_CODE);
         }
 
-        bottomBanner = findViewById(R.id.bottomBanner);
 
-        adView = new AdView(this);
-        adView.setAdUnitId(getString(R.string.Banner_ID));
-        bottomBanner.addView(adView);
 
-        loadBanner();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -124,31 +122,42 @@ public class StateActivity extends AppCompatActivity
     }
 
     private void loadBanner() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        AdSize adSize = getAdSize();
-        // Step 4 - Set the adaptive ad size on the ad view.
-        adView.setAdSize(adSize);
-
-        // Step 5 - Start loading the ad in the background.
-        adView.loadAd(adRequest);
-    }
-
-    private AdSize getAdSize() {
-        Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        display.getMetrics(outMetrics);
-
-        float widthPixels = outMetrics.widthPixels;
-        float density = outMetrics.density;
-
-        int adWidth = (int) (widthPixels / density);
-
-        // Step 3 - Get adaptive ad size and return for setting on the ad view.
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        adView = new AdView(
                 this,
-                adWidth
+                getString(R.string.FB_BANNER),
+                AdSize.BANNER_HEIGHT_50
         );
+
+        // Find the Ad Container
+        LinearLayout adContainer =  findViewById(R.id.banner_container);
+
+        // Add the ad view to your activity layout
+        adContainer.addView(adView);
+
+        AdListener adListener = new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                // Ad error callback
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        };
+
+        // Request an ad
+        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build());
     }
 
     @Override
@@ -263,5 +272,13 @@ public class StateActivity extends AppCompatActivity
                     .replace(R.id.main_frame, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
+        super.onDestroy();
     }
 }

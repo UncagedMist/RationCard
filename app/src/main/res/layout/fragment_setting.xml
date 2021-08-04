@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.SettingFragment">
 
-
     <TextView
         android:textSize="25sp"
         android:textAlignment="center"

@@ -2,15 +2,12 @@ package tbc.uncagedmist.rationcard;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
+
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -19,11 +16,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
-import com.google.android.ads.nativetemplates.rvadapter.AdmobNativeAdAdapter;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ import tbc.uncagedmist.rationcard.Model.Product;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    FrameLayout bottomDetailBanner;
     AdView adView;
 
     RecyclerView recyclerView;
@@ -55,6 +53,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_details);
 
+        loadBanner();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -63,15 +63,7 @@ public class DetailsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        bottomDetailBanner = findViewById(R.id.detailBelowBanner);
-
         detailShare = findViewById(R.id.detailShare);
-
-        adView = new AdView(this);
-        adView.setAdUnitId(getString(R.string.Banner_ID));
-        bottomDetailBanner.addView(adView);
-
-        loadBanner();
 
         Cursor cursor = new MyDatabase(this).getAllProductsByStateId(Common.CurrentStateId);
 
@@ -88,15 +80,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         DetailAdapter adapter = new DetailAdapter(this,productArrayList);
 
-        AdmobNativeAdAdapter admobNativeAdAdapter =
-                AdmobNativeAdAdapter.Builder.with(
-                        getString(R.string.Native_ID),
-                        adapter,
-                        "small")
-                        .adItemInterval(1)
-                        .build();
-
-        recyclerView.setAdapter(admobNativeAdAdapter);
+        recyclerView.setAdapter(adapter);
 
         detailShare.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,30 +95,49 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void loadBanner() {
-        AdRequest adRequest = new AdRequest.Builder().build();
+        adView = new AdView(
+                this,
+                getString(R.string.FB_BANNER),
+                AdSize.BANNER_HEIGHT_50
+        );
 
-        AdSize adSize = getAdSize();
-        // Step 4 - Set the adaptive ad size on the ad view.
-        adView.setAdSize(adSize);
+        // Find the Ad Container
+        LinearLayout adContainer =  findViewById(R.id.banner_container);
 
-        // Step 5 - Start loading the ad in the background.
-        adView.loadAd(adRequest);
+        // Add the ad view to your activity layout
+        adContainer.addView(adView);
+
+        AdListener adListener = new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                // Ad error callback
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        };
+
+        // Request an ad
+        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build());
     }
 
-    private AdSize getAdSize() {
-        Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        display.getMetrics(outMetrics);
-
-        float widthPixels = outMetrics.widthPixels;
-        float density = outMetrics.density;
-
-        int adWidth = (int) (widthPixels / density);
-
-        // Step 3 - Get adaptive ad size and return for setting on the ad view.
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-                this,
-                adWidth
-        );
+    @Override
+    protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
+        super.onDestroy();
     }
 }

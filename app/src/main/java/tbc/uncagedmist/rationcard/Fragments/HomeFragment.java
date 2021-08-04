@@ -1,16 +1,12 @@
 package tbc.uncagedmist.rationcard.Fragments;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
 import androidx.appcompat.widget.SearchView;
-import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.ads.nativetemplates.rvadapter.AdmobNativeAdAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -76,15 +71,8 @@ public class HomeFragment extends Fragment  {
 
         StateAdapter adapter = new StateAdapter(getContext(),stateArrayList);
 
-        AdmobNativeAdAdapter admobNativeAdAdapter =
-                AdmobNativeAdAdapter.Builder.with(
-                        getString(R.string.Native_ID),
-                        adapter,
-                        "small")
-                        .adItemInterval(3)
-                        .build();
 
-        recyclerView.setAdapter(admobNativeAdAdapter);
+        recyclerView.setAdapter(adapter);
 
         stateShare.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,19 +86,6 @@ public class HomeFragment extends Fragment  {
         });
 
         return myFragment;
-    }
-
-    private static void openCustomTabs(Activity activity, CustomTabsIntent customTabsIntent, Uri uri)    {
-        String packageName = "com.android.chrome";
-
-        try {
-
-            customTabsIntent.intent.setPackage(packageName);
-            customTabsIntent.launchUrl(activity,uri);
-        }
-        catch(ActivityNotFoundException ex) {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW,uri));
-        }
     }
 
     @Override
