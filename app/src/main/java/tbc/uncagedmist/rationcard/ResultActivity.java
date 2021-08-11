@@ -67,6 +67,8 @@ public class ResultActivity extends AppCompatActivity  {
         resultShare = findViewById(R.id.resultShare);
         resultBack = findViewById(R.id.resultBack);
 
+        progressBar.setVisibility(View.VISIBLE);
+
         getSupportActionBar().setTitle(Common.CurrentProductName);
 
         new AdBlockerWebView.init(this).initializeWebView(webView);
@@ -209,6 +211,7 @@ public class ResultActivity extends AppCompatActivity  {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            progressBar.setVisibility(View.VISIBLE);
             super.onPageStarted(view, url, favicon);
         }
 

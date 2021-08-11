@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,7 +56,7 @@ public class HomeFragment extends Fragment  {
 
         stateShare = myFragment.findViewById(R.id.stateShare);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
 
         Cursor cursor = new MyDatabase(getContext()).getAllStateData();
 
@@ -68,9 +69,7 @@ public class HomeFragment extends Fragment  {
             stateArrayList.add(state);
         }
 
-
         StateAdapter adapter = new StateAdapter(getContext(),stateArrayList);
-
 
         recyclerView.setAdapter(adapter);
 

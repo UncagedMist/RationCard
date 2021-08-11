@@ -18,8 +18,7 @@
             android:id="@+id/state_image"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bgback"/>
+            android:scaleType="centerCrop" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -36,8 +35,7 @@
             android:textColor="@android:color/white"
             android:background="@color/overlayBackgroundMenu"
             android:gravity="center_horizontal"
-            android:textSize="20sp"
-            android:text="Name Of State"/>
+            android:textSize="20sp" />
 
     </RelativeLayout>
 
