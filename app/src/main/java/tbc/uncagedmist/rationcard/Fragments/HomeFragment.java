@@ -1,6 +1,7 @@
 package tbc.uncagedmist.rationcard.Fragments;
 
-import android.content.Intent;
+import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -10,7 +11,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -19,8 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -34,7 +32,7 @@ public class HomeFragment extends Fragment  {
     RecyclerView recyclerView;
     ArrayList<State> stateArrayList = new ArrayList<>();
 
-    FloatingActionButton stateShare;
+    Context context;
 
     private static HomeFragment INSTANCE = null;
 
@@ -47,14 +45,18 @@ public class HomeFragment extends Fragment  {
     }
 
     @Override
+    public void onAttach(@NonNull Activity activity) {
+        super.onAttach(activity);
+        context = activity;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View myFragment = inflater.inflate(R.layout.fragment_home, container, false);
         setHasOptionsMenu(true);
 
         recyclerView = myFragment.findViewById(R.id.recyclerState);
-
-        stateShare = myFragment.findViewById(R.id.stateShare);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
 
@@ -69,20 +71,9 @@ public class HomeFragment extends Fragment  {
             stateArrayList.add(state);
         }
 
-        StateAdapter adapter = new StateAdapter(getContext(),stateArrayList);
+        StateAdapter adapter = new StateAdapter(context, stateArrayList);
 
         recyclerView.setAdapter(adapter);
-
-        stateShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                String message = "Never Miss A Thing About Ration Card. Install One Ration Card App and Stay Updated! \n https://play.google.com/store/apps/details?id=tbc.uncagedmist.rationcard";
-                intent.putExtra(Intent.EXTRA_TEXT, message);
-                startActivity(Intent.createChooser(intent, "Share One Ration Card App Using"));
-            }
-        });
 
         return myFragment;
     }
@@ -108,7 +99,8 @@ public class HomeFragment extends Fragment  {
 
                 for (State stateName : stateArrayList)   {
                     if (stateName.getStateName().toLowerCase().contains(newText.toLowerCase()))  {
-                        Cursor cursor = new MyDatabase(getContext()).getStateByNames(newText.toLowerCase());
+                        Cursor cursor = new MyDatabase(
+                                context).getStateByNames(newText.toLowerCase());
 
                         while (cursor.moveToNext()) {
                             State state = new State(
@@ -122,7 +114,7 @@ public class HomeFragment extends Fragment  {
 
                 }
 
-                StateAdapter adapter = new StateAdapter(getContext(),stateList);
+                StateAdapter adapter = new StateAdapter(context, stateList);
                 recyclerView.setAdapter(adapter);
 
                 return true;

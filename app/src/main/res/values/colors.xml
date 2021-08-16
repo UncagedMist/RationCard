@@ -16,4 +16,10 @@
     <color name="orange">#ffb067</color>
     <color name="green">#67ffae</color>
     <color name="setting">#9D4DA4</color>
+
+    <color name="color1">#EE4876</color>
+    <color name="color2">#B64FA0</color>
+    <color name="color3">#9253BC</color>
+    <color name="color4">#4C5CF0</color>
+    <color name="white">#FFFFFF</color>
 </resources>

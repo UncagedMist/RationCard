@@ -1,31 +1,29 @@
-package tbc.uncagedmist.rationcard;
+package tbc.uncagedmist.rationcard.Fragments;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import android.content.Intent;
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.http.SslError;
-import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdListener;
-import com.facebook.ads.AdSize;
-import com.facebook.ads.AdView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.monstertechno.adblocker.AdBlockerWebView;
 import com.monstertechno.adblocker.util.AdBlocker;
@@ -35,66 +33,39 @@ import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
 import com.shashank.sony.fancydialoglib.Icon;
 
 import tbc.uncagedmist.rationcard.Common.Common;
+import tbc.uncagedmist.rationcard.R;
 
-public class ResultActivity extends AppCompatActivity  {
+public class ResultFragment extends Fragment {
 
-    AdView adView;
+    View myFragment;
     WebView webView;
 
-    FloatingActionButton resultShare,resultBack;
+    FloatingActionButton resultBack;
     ProgressBar progressBar;
 
+    Context context;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Activity activity) {
+        context = (FragmentActivity) activity;
+        super.onAttach(activity);
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window window = getWindow();
-            window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        myFragment = inflater.inflate(R.layout.fragment_result, container, false);
 
-        setContentView(R.layout.activity_result);
+        webView = myFragment.findViewById(R.id.webResult);
+        progressBar = myFragment.findViewById(R.id.progress_bar);
+        resultBack = myFragment.findViewById(R.id.resultBack);
 
-        loadBanner();
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        webView = findViewById(R.id.webResult);
-        progressBar = findViewById(R.id.progress_bar);
-
-        resultShare = findViewById(R.id.resultShare);
-        resultBack = findViewById(R.id.resultBack);
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        getSupportActionBar().setTitle(Common.CurrentProductName);
-
-        new AdBlockerWebView.init(this).initializeWebView(webView);
+        new AdBlockerWebView.init(getContext()).initializeWebView(webView);
 
         webView.setWebViewClient(new MyWebViewClient());
 
         String url = Common.CurrentProductUrl.trim();
-
-        resultShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                String message = "Never Miss A Thing About Ration Card. Install One Ration Card App and Stay Updated! \n https://play.google.com/store/apps/details?id=tbc.uncagedmist.rationcard";
-                intent.putExtra(Intent.EXTRA_TEXT, message);
-                startActivity(Intent.createChooser(intent, "Share One Ration Card App Using"));
-            }
-        });
-
-        resultBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(ResultActivity.this,DetailsActivity.class));
-                finish();
-            }
-        });
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadWithOverviewMode(true);
@@ -104,45 +75,28 @@ public class ResultActivity extends AppCompatActivity  {
         webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
         webView.loadUrl(url);
-    }
 
-    private void loadBanner() {
-        adView = new AdView(
-                this,
-                getString(R.string.FB_BANNER),
-                AdSize.BANNER_HEIGHT_50
-        );
-
-        // Find the Ad Container
-        LinearLayout adContainer =  findViewById(R.id.banner_container);
-
-        // Add the ad view to your activity layout
-        adContainer.addView(adView);
-
-        AdListener adListener = new AdListener() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true ) {
             @Override
-            public void onError(Ad ad, AdError adError) {
-                // Ad error callback
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                // Ad loaded callback
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-                // Ad clicked callback
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-                // Ad impression logged callback
+            public void handleOnBackPressed() {
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                }
             }
         };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
-        // Request an ad
-        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build());
+        resultBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DetailFragment detailFragment = new DetailFragment();
+                FragmentTransaction transaction =
+                        ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.main_frame,detailFragment).commit();
+            }
+        });
+
+        return myFragment;
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -177,7 +131,7 @@ public class ResultActivity extends AppCompatActivity  {
 
             message += "\n\nDo you want to continue anyway?";
 
-            new FancyAlertDialog.Builder(ResultActivity.this)
+            new FancyAlertDialog.Builder(getActivity())
                     .setTitle("SSL Certificate Error")
                     .setBackgroundColor(Color.parseColor("#303F9F"))  //Don't pass R.color.colorvalue
                     .setMessage(message)
@@ -220,20 +174,5 @@ public class ResultActivity extends AppCompatActivity  {
             super.onPageFinished(view, url);
             progressBar.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (adView != null) {
-            adView.destroy();
-        }
-        super.onDestroy();
     }
 }

@@ -6,14 +6,10 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="FB_APP_ID">239396277600543</string>
-
-    <string name="FB_BANNER">239396277600543_239399624266875</string>
-    <string name="FB_FULL">239396277600543_239396887600482</string>
-    <string name="FB_NATIVE">239396277600543_260113035528867</string>
-
     <string name="ADMOB_APP_ID">ca-app-pub-7920815986886474~2119672434</string>
 
+    <string name="ADMOB_BANNER">ca-app-pub-7920815986886474/8505722584</string>
+    <string name="ADMOB_FULL">ca-app-pub-7920815986886474/3772787579</string>
     <string name="ADMOB_NATIVE">ca-app-pub-7920815986886474/4855224632</string>
     <string name="ADMOB_OPEN">ca-app-pub-7920815986886474/6027076512</string>
 </resources>

@@ -9,7 +9,9 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.facebook.ads.AudienceNetworkAds;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import tbc.uncagedmist.rationcard.Utility.MyNetworkReceiver;
 
@@ -30,7 +32,11 @@ public class MyApplicationClass extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        AudienceNetworkAds.initialize(this);
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) { }
+        });
 
         context = getApplicationContext();
 

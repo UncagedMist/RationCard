@@ -31,15 +31,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:text="Slide to Continue"
-        app:text_size="23dp"
-        app:text_style="bold"
-        app:text_color="@color/colorWhite"
-        android:layout_margin="8dp"
-        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="11dp"
         android:elevation="10dp"
+        android:padding="8dp"
         app:area_margin="10dp"
         app:inner_color="#2196f3"
-        app:outer_color="@drawable/bg"/>
+        app:outer_color="@drawable/bg"
+        app:text="Slide to Continue"
+        app:text_color="@color/colorWhite"
+        app:text_size="23dp"
+        app:text_style="bold" />
 
 </RelativeLayout>
