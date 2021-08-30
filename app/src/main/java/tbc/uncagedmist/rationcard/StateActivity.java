@@ -29,6 +29,11 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.ironsource.mediationsdk.ISBannerSize;
+import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.IronSourceBannerLayout;
+import com.ironsource.mediationsdk.logger.IronSourceError;
+import com.ironsource.mediationsdk.sdk.BannerListener;
 import com.shashank.sony.fancydialoglib.Animation;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.Icon;
@@ -44,10 +49,10 @@ public class StateActivity extends AppCompatActivity {
     CurvedBottomNavigationView curvedBottomNavigationView;
     FloatingActionButton fab, stateShare;
 
-    FrameLayout adContainerView;
-    AdView adView;
-
     Toolbar toolbar;
+
+    FrameLayout bannerContainer;
+    IronSourceBannerLayout banner;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -80,7 +85,17 @@ public class StateActivity extends AppCompatActivity {
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
 
+        IronSource.init(
+                this,
+                getString(R.string.IS_APP_KEY),
+                IronSource.AD_UNIT.BANNER
+        );
+
         setContentView(R.layout.activity_state);
+
+        createAndLoadBanner();
+
+        IronSource.shouldTrackNetworkState(this, true);
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title);
@@ -96,15 +111,6 @@ public class StateActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         stateShare = findViewById(R.id.stateShare);
         curvedBottomNavigationView = findViewById(R.id.customBottomBar);
-
-        adContainerView = findViewById(R.id.ad_container);
-        // Step 1 - Create an AdView and set the ad unit ID on it.
-
-        adView = new AdView(this);
-        adView.setAdUnitId(getString(R.string.ADMOB_BANNER));
-        adContainerView.addView(adView);
-
-        loadBanner();
 
         HomeFragment homeFragment = new HomeFragment();
         FragmentManager manager = getSupportFragmentManager();
@@ -149,38 +155,57 @@ public class StateActivity extends AppCompatActivity {
         });
     }
 
-    private void loadBanner() {
-        AdRequest adRequest =
-                new AdRequest.Builder().build();
+    private void createAndLoadBanner() {
+        bannerContainer = findViewById(R.id.bannerContainer);
+        banner = IronSource.createBanner(this, ISBannerSize.BANNER);
 
-        AdSize adSize = getAdSize();
-        // Step 4 - Set the adaptive ad size on the ad view.
-        adView.setAdSize(adSize);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        );
 
+        bannerContainer.addView(banner, 0, layoutParams);
 
-        // Step 5 - Start loading the ad in the background.
-        adView.loadAd(adRequest);
+        banner.setBannerListener(new BannerListener() {
+            @Override
+            public void onBannerAdLoaded() {
+                banner.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onBannerAdLoadFailed(IronSourceError error) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        bannerContainer.removeAllViews();
+                    }
+                });
+            }
+            @Override
+            public void onBannerAdClicked() {
+
+            }
+            @Override
+            public void onBannerAdScreenPresented() {
+
+            }
+            @Override
+            public void onBannerAdScreenDismissed() {
+
+            }
+            @Override
+            public void onBannerAdLeftApplication() {
+
+            }
+        });
+
+        IronSource.loadBanner(banner, "DefaultBanner");
     }
 
-    private AdSize getAdSize() {
-        // Step 2 - Determine the screen width (less decorations) to use for the ad width.
-        Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        display.getMetrics(outMetrics);
-
-        float widthPixels = outMetrics.widthPixels;
-        float density = outMetrics.density;
-
-        int adWidth = (int) (widthPixels / density);
-
-        // Step 3 - Get adaptive ad size and return for setting on the ad view.
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
-    }
 
     @Override
     public void onBackPressed() {
         new FancyAlertDialog.Builder(StateActivity.this)
-                .setTitle("Games Wallpaper App")
+                .setTitle("Mutant Wallpaper App")
                 .setBackgroundColor(Color.parseColor("#303F9F"))  //Don't pass R.color.colorvalue
                 .setMessage("Customize your Phone's Look with our new Wallpaper App.Support us by downloading our other apps!")
                 .setNegativeBtnText("Don't")
@@ -191,7 +216,7 @@ public class StateActivity extends AppCompatActivity {
                 .isCancellable(false)
                 .setIcon(R.drawable.ic_star_border_black_24dp, Icon.Visible)
                 .OnPositiveClicked(() ->
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.mobilewallpapers"))))
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.mutantwallpaper"))))
                 .OnNegativeClicked(() -> {
                 })
                 .build();
@@ -209,9 +234,7 @@ public class StateActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (adView != null) {
-            adView.destroy();
-        }
         super.onDestroy();
+        IronSource.destroyBanner(banner);
     }
 }

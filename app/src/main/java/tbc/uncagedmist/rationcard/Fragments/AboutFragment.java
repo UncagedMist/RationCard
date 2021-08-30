@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.shashank.sony.fancyaboutpagelib.FancyAboutPage;
 
+import tbc.uncagedmist.rationcard.Common.Common;
 import tbc.uncagedmist.rationcard.R;
 
 public class AboutFragment extends Fragment  {
@@ -18,6 +19,7 @@ public class AboutFragment extends Fragment  {
     View myFragment;
 
     FancyAboutPage aboutPage;
+
     String version;
 
     @Override

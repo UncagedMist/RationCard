@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ironsource.mediationsdk.IronSource;
+
 import java.util.ArrayList;
 
 import tbc.uncagedmist.rationcard.Adapter.StateAdapter;
@@ -53,6 +55,8 @@ public class HomeFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         View myFragment = inflater.inflate(R.layout.fragment_home, container, false);
         setHasOptionsMenu(true);
 
@@ -122,5 +126,17 @@ public class HomeFragment extends Fragment  {
         });
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IronSource.onResume((Activity) context);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        IronSource.onPause((Activity) context);
     }
 }

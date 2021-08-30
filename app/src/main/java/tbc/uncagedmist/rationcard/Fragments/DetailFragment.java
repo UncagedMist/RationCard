@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.ironsource.mediationsdk.IronSource;
 
 import java.util.ArrayList;
 
@@ -46,6 +47,7 @@ public class DetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         myFragment = inflater.inflate(R.layout.fragment_detail, container, false);
 
         recyclerView = myFragment.findViewById(R.id.recycler_detail);
@@ -82,5 +84,17 @@ public class DetailFragment extends Fragment {
         });
 
         return myFragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IronSource.onResume((Activity) context);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        IronSource.onPause((Activity) context);
     }
 }

@@ -12,7 +12,9 @@ import android.os.Bundle;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.ironsource.mediationsdk.IronSource;
 
+import tbc.uncagedmist.rationcard.Utility.AppOpenManager;
 import tbc.uncagedmist.rationcard.Utility.MyNetworkReceiver;
 
 public class MyApplicationClass extends Application {
@@ -24,10 +26,12 @@ public class MyApplicationClass extends Application {
     public static Activity mActivity;
     MyNetworkReceiver mNetworkReceiver;
 
+    @SuppressLint("StaticFieldLeak")
+    private static AppOpenManager appOpenManager;
+
     public static Context getContext() {
         return context;
     }
-
 
     @Override
     public void onCreate() {
@@ -40,6 +44,9 @@ public class MyApplicationClass extends Application {
 
         context = getApplicationContext();
 
+        IronSource.setMetaData("Facebook_IS_CacheFlag","IMAGE");
+
+        appOpenManager = new AppOpenManager(this);
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override

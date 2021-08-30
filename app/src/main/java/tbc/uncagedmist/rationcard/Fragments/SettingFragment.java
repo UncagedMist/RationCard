@@ -3,6 +3,7 @@ package tbc.uncagedmist.rationcard.Fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,29 +15,25 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.FullScreenContentCallback;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.Task;
+import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.logger.IronSourceError;
+import com.ironsource.mediationsdk.model.Placement;
+import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
 import com.shashank.sony.fancydialoglib.Animation;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.Icon;
 
 import tbc.uncagedmist.rationcard.R;
-import tbc.uncagedmist.rationcard.StateActivity;
 
 public class SettingFragment extends Fragment {
 
@@ -50,7 +47,8 @@ public class SettingFragment extends Fragment {
 
     Context context;
 
-    private InterstitialAd mInterstitialAd;
+    String version;
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -62,6 +60,15 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        IronSource.init(
+                (Activity) context,
+                context.getString(R.string.IS_APP_KEY),
+                IronSource.AD_UNIT.REWARDED_VIDEO
+        );
+
+        loadRewarded();
+
         myFragment = inflater.inflate(R.layout.fragment_setting, container, false);
 
         manager = ReviewManagerFactory.create((Activity)context);
@@ -76,6 +83,15 @@ public class SettingFragment extends Fragment {
 
         txtVersion = myFragment.findViewById(R.id.txtVersion);
 
+        try {
+            version = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        txtVersion.setText("App Version : "+ version);
+
         onClickImplementation();
 
         return myFragment;
@@ -86,8 +102,9 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if (mInterstitialAd != null) {
-                    mInterstitialAd.show((Activity) context);
+                if (IronSource.isRewardedVideoAvailable())  {
+                    //show rewarded video
+                    IronSource.showRewardedVideo("DefaultRewardedVideo");
                 }
                 else {
                     AboutFragment aboutFragment = new AboutFragment();
@@ -102,8 +119,9 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if (mInterstitialAd != null) {
-                    mInterstitialAd.show((Activity) context);
+                if (IronSource.isRewardedVideoAvailable())  {
+                    //show rewarded video
+                    IronSource.showRewardedVideo("DefaultRewardedVideo");
                 }
                 else {
                     PrivacyFragment privacyFragment = new PrivacyFragment();
@@ -154,44 +172,6 @@ public class SettingFragment extends Fragment {
         });
     }
 
-    private void loadFullscreen() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        InterstitialAd.load(
-                context,
-                context.getString(R.string.ADMOB_FULL),
-                adRequest,
-                new InterstitialAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                        mInterstitialAd = interstitialAd;
-
-                        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
-                            @Override
-                            public void onAdDismissedFullScreenContent() {
-                                Log.d("TAG", "The ad was dismissed.");
-                            }
-
-                            @Override
-                            public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                Log.d("TAG", "The ad failed to show.");
-                            }
-
-                            @Override
-                            public void onAdShowedFullScreenContent() {
-                                mInterstitialAd = null;
-                                Log.d("TAG", "The ad was shown.");
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        mInterstitialAd = null;
-                    }
-                });
-    }
-
     private void feedback() {
         Task<ReviewInfo> request = manager.requestReviewFlow();
 
@@ -217,13 +197,13 @@ public class SettingFragment extends Fragment {
                 .setMessage("Do You Want to Step Out?")
                 .setNegativeBtnText("Exit")
                 .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
-                .setPositiveBtnText("Rate US")
+                .setPositiveBtnText("Support US")
                 .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
                 .setAnimation(Animation.POP)
                 .isCancellable(true)
                 .setIcon(R.drawable.ic_star_border_black_24dp, Icon.Visible)
                 .OnPositiveClicked(() ->
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.allgameswallpapers"))))
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.mutantwallpaper"))))
                 .OnNegativeClicked(() -> {
                     getActivity().moveTaskToBack(true);
                     android.os.Process.killProcess(android.os.Process.myPid());
@@ -231,4 +211,59 @@ public class SettingFragment extends Fragment {
                 })
                 .build();
     }
+
+    private void loadRewarded() {
+        IronSource.setRewardedVideoListener(new RewardedVideoListener() {
+
+            @Override
+            public void onRewardedVideoAdOpened() {
+            }
+
+            @Override
+            public void onRewardedVideoAdClosed() {
+            }
+
+            @Override
+            public void onRewardedVideoAvailabilityChanged(boolean available) {
+                //Change the in-app 'Traffic Driver' state according to availability.
+            }
+
+            @Override
+            public void onRewardedVideoAdRewarded(Placement placement) {
+                /** here you can reward the user according to the given amount.
+                 String rewardName = placement.getRewardName();
+                 int rewardAmount = placement.getRewardAmount();
+                 */
+            }
+
+            @Override
+            public void onRewardedVideoAdShowFailed(IronSourceError error) {
+            }
+
+            @Override
+            public void onRewardedVideoAdClicked(Placement placement){
+            }
+
+            @Override
+            public void onRewardedVideoAdStarted(){
+            }
+
+            @Override
+            public void onRewardedVideoAdEnded(){
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IronSource.onResume((Activity) context);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        IronSource.onPause((Activity) context);
+    }
+
 }

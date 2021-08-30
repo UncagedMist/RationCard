@@ -17,12 +17,11 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.FullScreenContentCallback;
-import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.logger.IronSourceError;
+import com.ironsource.mediationsdk.sdk.InterstitialListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -39,8 +38,6 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
     Context context;
     ArrayList<Product> products;
 
-    private InterstitialAd mInterstitialAd;
-
     public DetailAdapter(Context context, ArrayList<Product> products) {
         this.context = context;
         this.products = products;
@@ -52,7 +49,14 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.layout_details,parent,false);
 
+        IronSource.init(
+                (Activity) context,
+                context.getString(R.string.IS_APP_KEY),
+                IronSource.AD_UNIT.INTERSTITIAL
+        );
+
         loadFullscreen();
+        IronSource.loadInterstitial();
 
         return new DetailViewHolder(view);
     }
@@ -80,8 +84,9 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
         holder.cardDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mInterstitialAd != null) {
-                    mInterstitialAd.show((Activity) context);
+                if (IronSource.isInterstitialReady()) {
+                    //show the interstitial
+                    IronSource.showInterstitial("DefaultInterstitial");
                 }
                 else {
 
@@ -105,41 +110,52 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
     }
 
     private void loadFullscreen() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        InterstitialAd.load(
-                context,
-                context.getString(R.string.ADMOB_FULL),
-                adRequest,
-                new InterstitialAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                        mInterstitialAd = interstitialAd;
-
-                        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
-                            @Override
-                            public void onAdDismissedFullScreenContent() {
-                                Log.d("TAG", "The ad was dismissed.");
-                            }
-
-                            @Override
-                            public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                Log.d("TAG", "The ad failed to show.");
-                            }
-
-                            @Override
-                            public void onAdShowedFullScreenContent() {
-                                mInterstitialAd = null;
-                                Log.d("TAG", "The ad was shown.");
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        mInterstitialAd = null;
-                    }
-                });
+        IronSource.setInterstitialListener(new InterstitialListener() {
+            /**
+             * Invoked when Interstitial Ad is ready to be shown after load function was called.
+             */
+            @Override
+            public void onInterstitialAdReady() {
+            }
+            /**
+             * invoked when there is no Interstitial Ad available after calling load function.
+             */
+            @Override
+            public void onInterstitialAdLoadFailed(IronSourceError error) {
+            }
+            /**
+             * Invoked when the Interstitial Ad Unit is opened
+             */
+            @Override
+            public void onInterstitialAdOpened() {
+            }
+            /*
+             * Invoked when the ad is closed and the user is about to return to the application.
+             */
+            @Override
+            public void onInterstitialAdClosed() {
+            }
+            /**
+             * Invoked when Interstitial ad failed to show.
+             * @param error - An object which represents the reason of showInterstitial failure.
+             */
+            @Override
+            public void onInterstitialAdShowFailed(IronSourceError error) {
+            }
+            /*
+             * Invoked when the end user clicked on the interstitial ad, for supported networks only.
+             */
+            @Override
+            public void onInterstitialAdClicked() {
+            }
+            /** Invoked right before the Interstitial screen is about to open.
+             *  NOTE - This event is available only for some of the networks.
+             *  You should NOT treat this event as an interstitial impression, but rather use InterstitialAdOpenedEvent
+             */
+            @Override
+            public void onInterstitialAdShowSucceeded() {
+            }
+        });
     }
 
     public static class DetailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
