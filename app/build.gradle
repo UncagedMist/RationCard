@@ -3,14 +3,14 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "tbc.uncagedmist.rationcard"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 39
-        versionName "0.3.9"
+        versionCode 40
+        versionName "0.4.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -33,7 +33,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
@@ -45,16 +45,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-analytics'
 
-    //iron-source network
-    implementation 'com.ironsource.sdk:mediationsdk:7.1.9'
-
-    // Add AdMob and Ad Manager Network
-    implementation 'com.google.android.gms:play-services-ads:20.3.0'
-    implementation 'com.ironsource.adapters:admobadapter:4.3.21'
-
-    // Add Facebook Network
-    implementation 'com.ironsource.adapters:facebookadapter:4.3.29'
-    implementation 'com.facebook.android:audience-network-sdk:6.6.0'
+    implementation 'com.google.android.gms:play-services-ads:20.4.0'
+    implementation 'com.google.ads.mediation:facebook:6.7.0.0'
 
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
 
@@ -72,7 +64,7 @@ dependencies {
     implementation 'com.github.MonsterTechnoGits:WebViewAdblock:1.1'
     implementation 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
 
-    implementation 'com.google.android.play:core:1.10.0'
+    implementation 'com.google.android.play:core:1.10.2'
 
     def lifecycle_version = '2.0.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"

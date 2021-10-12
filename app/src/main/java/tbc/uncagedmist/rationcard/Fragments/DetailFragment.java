@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.ironsource.mediationsdk.IronSource;
 
 import java.util.ArrayList;
 
@@ -84,17 +83,5 @@ public class DetailFragment extends Fragment {
         });
 
         return myFragment;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        IronSource.onResume((Activity) context);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        IronSource.onPause((Activity) context);
     }
 }

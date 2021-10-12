@@ -25,14 +25,12 @@ import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.Task;
-import com.ironsource.mediationsdk.IronSource;
-import com.ironsource.mediationsdk.logger.IronSourceError;
-import com.ironsource.mediationsdk.model.Placement;
-import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
 import com.shashank.sony.fancydialoglib.Animation;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.Icon;
 
+import tbc.uncagedmist.rationcard.Ads.GoogleAds;
+import tbc.uncagedmist.rationcard.Common.MyApplicationClass;
 import tbc.uncagedmist.rationcard.R;
 
 public class SettingFragment extends Fragment {
@@ -61,13 +59,9 @@ public class SettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        IronSource.init(
-                (Activity) context,
-                context.getString(R.string.IS_APP_KEY),
-                IronSource.AD_UNIT.REWARDED_VIDEO
-        );
-
-        loadRewarded();
+        if (MyApplicationClass.getInstance().isShowAds())   {
+            GoogleAds.loadGoogleFullscreen(context);
+        }
 
         myFragment = inflater.inflate(R.layout.fragment_setting, container, false);
 
@@ -102,9 +96,8 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if (IronSource.isRewardedVideoAvailable())  {
-                    //show rewarded video
-                    IronSource.showRewardedVideo("DefaultRewardedVideo");
+                if (GoogleAds.mInterstitialAd != null)  {
+                    GoogleAds.mInterstitialAd.show((Activity) context);
                 }
                 else {
                     AboutFragment aboutFragment = new AboutFragment();
@@ -119,9 +112,8 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if (IronSource.isRewardedVideoAvailable())  {
-                    //show rewarded video
-                    IronSource.showRewardedVideo("DefaultRewardedVideo");
+                if (GoogleAds.mInterstitialAd != null)  {
+                    GoogleAds.mInterstitialAd.show((Activity) context);
                 }
                 else {
                     PrivacyFragment privacyFragment = new PrivacyFragment();
@@ -211,59 +203,4 @@ public class SettingFragment extends Fragment {
                 })
                 .build();
     }
-
-    private void loadRewarded() {
-        IronSource.setRewardedVideoListener(new RewardedVideoListener() {
-
-            @Override
-            public void onRewardedVideoAdOpened() {
-            }
-
-            @Override
-            public void onRewardedVideoAdClosed() {
-            }
-
-            @Override
-            public void onRewardedVideoAvailabilityChanged(boolean available) {
-                //Change the in-app 'Traffic Driver' state according to availability.
-            }
-
-            @Override
-            public void onRewardedVideoAdRewarded(Placement placement) {
-                /** here you can reward the user according to the given amount.
-                 String rewardName = placement.getRewardName();
-                 int rewardAmount = placement.getRewardAmount();
-                 */
-            }
-
-            @Override
-            public void onRewardedVideoAdShowFailed(IronSourceError error) {
-            }
-
-            @Override
-            public void onRewardedVideoAdClicked(Placement placement){
-            }
-
-            @Override
-            public void onRewardedVideoAdStarted(){
-            }
-
-            @Override
-            public void onRewardedVideoAdEnded(){
-            }
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        IronSource.onResume((Activity) context);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        IronSource.onPause((Activity) context);
-    }
-
 }
