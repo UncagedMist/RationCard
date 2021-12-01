@@ -11,14 +11,18 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 
@@ -31,6 +35,7 @@ public class HomeFragment extends Fragment  {
 
     RecyclerView recyclerView;
     ArrayList<State> stateArrayList = new ArrayList<>();
+    EditText edtState;
 
     Context context;
 
@@ -56,59 +61,34 @@ public class HomeFragment extends Fragment  {
 
 
         View myFragment = inflater.inflate(R.layout.fragment_home, container, false);
-        setHasOptionsMenu(true);
 
         recyclerView = myFragment.findViewById(R.id.recyclerState);
+        edtState = myFragment.findViewById(R.id.edtState);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Cursor cursor = new MyDatabase(getContext()).getAllStateData();
-
-        while (cursor.moveToNext()) {
-            State state = new State(
-                    cursor.getString(0),
-                    cursor.getString(1),
-                    cursor.getString(2)
-            );
-            stateArrayList.add(state);
-        }
-
-        StateAdapter adapter = new StateAdapter(context, stateArrayList);
-
-        recyclerView.setAdapter(adapter);
-
-        return myFragment;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.home_menu,menu);
-
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-
-        searchView.setQueryHint("Enter State Name");
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        edtState.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 ArrayList<State> stateList = new ArrayList<>();
 
+                String edtStateName = edtState.getText().toString().trim();
+
                 for (State stateName : stateArrayList)   {
-                    if (stateName.getStateName().toLowerCase().contains(newText.toLowerCase()))  {
+                    if (stateName.getStateName().toLowerCase().contains(edtStateName.toLowerCase()))  {
                         Cursor cursor = new MyDatabase(
-                                context).getStateByNames(newText.toLowerCase());
+                                context).getStateByNames(edtStateName.toLowerCase());
 
                         while (cursor.moveToNext()) {
                             State state = new State(
                                     cursor.getString(0),
                                     cursor.getString(1),
-                                    cursor.getString(2)
+                                    cursor.getString(2),
+                                    cursor.getString(3)
                             );
                             stateList.add(state);
                         }
@@ -118,11 +98,33 @@ public class HomeFragment extends Fragment  {
 
                 StateAdapter adapter = new StateAdapter(context, stateList);
                 recyclerView.setAdapter(adapter);
+            }
 
-                return true;
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
 
-        super.onCreateOptionsMenu(menu, inflater);
+       getAllStateList();
+
+       return myFragment;
+    }
+
+    private void getAllStateList() {
+        Cursor cursor = new MyDatabase(getContext()).getAllStateData();
+
+        while (cursor.moveToNext()) {
+            State state = new State(
+                    cursor.getString(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3)
+            );
+            stateArrayList.add(state);
+        }
+
+        StateAdapter adapter = new StateAdapter(context, stateArrayList);
+
+        recyclerView.setAdapter(adapter);
     }
 }

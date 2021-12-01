@@ -3,7 +3,6 @@ package tbc.uncagedmist.rationcard;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -17,7 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,7 +25,6 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.shashank.sony.fancydialoglib.Animation;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
@@ -35,17 +32,12 @@ import com.shashank.sony.fancydialoglib.Icon;
 
 import tbc.uncagedmist.rationcard.Common.MyApplicationClass;
 import tbc.uncagedmist.rationcard.Fragments.HomeFragment;
-import tbc.uncagedmist.rationcard.Fragments.SettingFragment;
-import tbc.uncagedmist.rationcard.Helper.CurvedBottomNavigationView;
 
 public class StateActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 31;
 
-    CurvedBottomNavigationView curvedBottomNavigationView;
-    FloatingActionButton fab, stateShare;
-
-    Toolbar toolbar;
+    FloatingActionButton stateShare;
 
     private FrameLayout adContainerView;
     private AdView adView;
@@ -83,12 +75,6 @@ public class StateActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_state);
 
-
-
-        toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.title);
-        setSupportActionBar(toolbar);
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)   {
             requestPermissions(new String[]{
@@ -96,9 +82,7 @@ public class StateActivity extends AppCompatActivity {
             }, PERMISSION_REQUEST_CODE);
         }
 
-        fab = findViewById(R.id.fab);
         stateShare = findViewById(R.id.stateShare);
-        curvedBottomNavigationView = findViewById(R.id.customBottomBar);
 
         adContainerView = findViewById(R.id.bannerContainer);
         // Step 1 - Create an AdView and set the ad unit ID on it.
@@ -115,31 +99,7 @@ public class StateActivity extends AppCompatActivity {
 
         manager.beginTransaction().add(R.id.main_frame,homeFragment).commit();
 
-        curvedBottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    Fragment fragment;
-
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                        if (item.getItemId() == R.id.action_home) {
-                            toolbar.setBackgroundColor(getColor(R.color.color1));
-                            getSupportActionBar().setTitle(R.string.app_name);
-                            fragment = new HomeFragment();
-                            fab.setImageResource(R.drawable.ic_baseline_home_24);
-                        }
-                        else if (item.getItemId() == R.id.action_setting) {
-                            toolbar.setBackgroundColor(getColor(R.color.color2));
-                            getSupportActionBar().setTitle("Settings");
-                            fragment = new SettingFragment();
-                            fab.setImageResource(R.drawable.ic_baseline_settings_suggest_24);
-                        }
-                        return loadFragment(fragment);
-                    }
-                });
-
         loadFragment(HomeFragment.getInstance());
-        fab.setImageResource(R.drawable.ic_baseline_home_24);
 
         stateShare.setOnClickListener(new View.OnClickListener() {
             @Override

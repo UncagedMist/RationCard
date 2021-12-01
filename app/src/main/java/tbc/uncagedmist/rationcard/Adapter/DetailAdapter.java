@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -54,14 +55,12 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
     @Override
     public void onBindViewHolder(@NonNull DetailAdapter.DetailViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
-        holder.progressBar.setVisibility(View.VISIBLE);
 
         Picasso.get()
-                .load(products.get(position).getProductImage())
+                .load(R.mipmap.ic_logo)
                 .into(holder.detailImage, new Callback() {
                     @Override
                     public void onSuccess() {
-                        holder.progressBar.setVisibility(View.GONE);
                         holder.detailName.setText(products.get(position).getProductName());
                     }
 
@@ -71,7 +70,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
                     }
                 });
 
-        holder.cardDetails.setOnClickListener(new View.OnClickListener() {
+        holder.detailCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (GoogleAds.mInterstitialAd != null)  {
@@ -103,8 +102,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
 
         ImageView detailImage;
         TextView detailName;
-        CardView cardDetails;
-        ProgressBar progressBar;
+        RelativeLayout detailCard;
 
         IRecyclerItemSelectListener iRecyclerItemSelectListener;
 
@@ -115,10 +113,11 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
         public DetailViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            detailImage = itemView.findViewById(R.id.avatar_image);
-            detailName = itemView.findViewById(R.id.txtTitle);
-            cardDetails = itemView.findViewById(R.id.card_details);
-            progressBar = itemView.findViewById(R.id.progress_bar);
+            detailImage = itemView.findViewById(R.id.productImage);
+            detailName = itemView.findViewById(R.id.productName);
+            detailCard = itemView.findViewById(R.id.card_details);
+
+            detailName.setSelected(true);
 
             itemView.setOnClickListener(this);
         }

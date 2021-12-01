@@ -12,12 +12,15 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
+import tbc.uncagedmist.rationcard.R;
+
 public class GoogleAds {
-    public static final String FULLSCREEN_ID = "ca-app-pub-7920815986886474/3772787579";
 
     public static InterstitialAd mInterstitialAd;
 
     public static void loadGoogleFullscreen(Context context)    {
+
+        final String FULLSCREEN_ID = context.getString(R.string.ADMOB_FULL);
 
         AdRequest adRequest = new AdRequest.Builder().build();
 

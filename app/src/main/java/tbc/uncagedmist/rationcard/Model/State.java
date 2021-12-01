@@ -2,15 +2,16 @@ package tbc.uncagedmist.rationcard.Model;
 
 public class State {
 
-    private String stateId,stateName, stateImage;
+    private String stateId,stateName, stateImage, stateDesc;
 
     public State() {
     }
 
-    public State(String stateId, String stateName, String stateImage) {
+    public State(String stateId, String stateName, String stateImage, String stateDesc) {
         this.stateId = stateId;
         this.stateName = stateName;
         this.stateImage = stateImage;
+        this.stateDesc = stateDesc;
     }
 
     public String getStateId() {
@@ -35,5 +36,13 @@ public class State {
 
     public void setStateImage(String stateImage) {
         this.stateImage = stateImage;
+    }
+
+    public String getStateDesc() {
+        return stateDesc;
+    }
+
+    public void setStateDesc(String stateDesc) {
+        this.stateDesc = stateDesc;
     }
 }

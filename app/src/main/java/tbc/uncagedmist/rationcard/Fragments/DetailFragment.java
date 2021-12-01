@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -31,6 +32,7 @@ public class DetailFragment extends Fragment {
     RecyclerView recyclerView;
     ArrayList<Product> productArrayList = new ArrayList<>();
     FloatingActionButton resultBack;
+    TextView txtName;
 
     View myFragment;
 
@@ -52,6 +54,10 @@ public class DetailFragment extends Fragment {
         recyclerView = myFragment.findViewById(R.id.recycler_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         resultBack = myFragment.findViewById(R.id.resultBack);
+        txtName = myFragment.findViewById(R.id.txtName);
+
+        txtName.setSelected(true);
+        txtName.setText(Common.CurrentStateName);
 
         Cursor cursor = new MyDatabase(
                 getContext())
@@ -62,8 +68,7 @@ public class DetailFragment extends Fragment {
                     cursor.getString(0),
                     cursor.getString(1),
                     cursor.getString(2),
-                    cursor.getString(3),
-                    cursor.getString(4)
+                    cursor.getString(3)
             );
             productArrayList.add(product);
         }

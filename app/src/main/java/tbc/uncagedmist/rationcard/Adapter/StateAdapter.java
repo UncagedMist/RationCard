@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,8 +38,6 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
     Context context;
     ArrayList<State> states;
 
-    private InterstitialAd mInterstitialAd;
-
     public StateAdapter(Context context, ArrayList<State> states) {
         this.context = context;
         this.states = states;
@@ -59,24 +59,25 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
     @Override
     public void onBindViewHolder(@NonNull StateAdapter.StateViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
-        holder.progressBar.setVisibility(View.VISIBLE);
+        holder.stateName.setText(states.get(position).getStateName());
+        holder.stateDesc.setText(states.get(position).getStateDesc());
 
         Picasso.get()
                 .load(states.get(position).getStateImage())
                 .into(holder.stateImage, new Callback() {
                     @Override
                     public void onSuccess() {
-                        holder.progressBar.setVisibility(View.GONE);
-                        holder.stateName.setText(states.get(position).getStateName());
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Picasso.get()
+                                .load(R.drawable.pic_1)
+                                .into(holder.stateImage);
                     }
                 });
 
-        holder.cardStates.setOnClickListener(new View.OnClickListener() {
+        holder.stateCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (GoogleAds.mInterstitialAd != null)  {
@@ -102,9 +103,8 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
     public static class StateViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView stateImage;
-        TextView stateName;
-        CardView cardStates;
-        ProgressBar progressBar;
+        TextView stateName, stateDesc;
+        RelativeLayout stateCard;
 
         IRecyclerItemSelectListener iRecyclerItemSelectListener;
 
@@ -115,10 +115,13 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.StateViewHol
         public StateViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            stateImage = itemView.findViewById(R.id.state_image);
-            stateName = itemView.findViewById(R.id.state_name);
-            cardStates = itemView.findViewById(R.id.card_states);
-            progressBar = itemView.findViewById(R.id.progress_bar);
+            stateImage = itemView.findViewById(R.id.stateImage);
+            stateName = itemView.findViewById(R.id.stateName);
+            stateDesc = itemView.findViewById(R.id.stateDesc);
+            stateCard = itemView.findViewById(R.id.stateCard);
+
+            stateName.setSelected(true);
+            stateDesc.setSelected(true);
 
             itemView.setOnClickListener(this);
         }

@@ -1,16 +1,15 @@
 package tbc.uncagedmist.rationcard.Model;
 
 public class Product {
-    private String productId,stateId,productName,productImage,productUrl;
+    private String productId,stateId,productName,productUrl;
 
     public Product() {
     }
 
-    public Product(String productId, String stateId, String productName, String productImage, String productUrl) {
+    public Product(String productId, String stateId, String productName, String productUrl) {
         this.productId = productId;
         this.stateId = stateId;
         this.productName = productName;
-        this.productImage = productImage;
         this.productUrl = productUrl;
     }
 
@@ -36,14 +35,6 @@ public class Product {
 
     public void setProductName(String productName) {
         this.productName = productName;
-    }
-
-    public String getProductImage() {
-        return productImage;
-    }
-
-    public void setProductImage(String productImage) {
-        this.productImage = productImage;
     }
 
     public String getProductUrl() {

@@ -32,7 +32,8 @@
 
         <activity
             android:name=".SplashActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,17 +49,10 @@
             android:hardwareAccelerated="true"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
-        <receiver android:name=".Utility.MyNetworkReceiver">
+        <receiver android:name=".Utility.MyNetworkReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".Receiver.Receiver">
-            <intent-filter>
-                <action android:name="android.media.action.DISPLAY_NOTIFICATION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 

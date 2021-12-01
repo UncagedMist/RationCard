@@ -25,7 +25,6 @@ import com.ncorti.slidetoact.SlideToActView;
 import java.util.Calendar;
 
 import tbc.uncagedmist.rationcard.Common.Common;
-import tbc.uncagedmist.rationcard.Receiver.Receiver;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -44,7 +43,6 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         checkAppUpdate();
-        registerNotification();
 
         setContentView(R.layout.activity_splash);
 
@@ -87,21 +85,6 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
-    private void registerNotification() {
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(SplashActivity.this, Receiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-
-        calendar.set(Calendar.HOUR_OF_DAY, 7);
-        calendar.set(calendar.MINUTE, 30);
-        calendar.set(Calendar.SECOND, 0);
-
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                1000 * 60 * 300, pendingIntent);
-    }
 
     @Override
     protected void onResume() {
